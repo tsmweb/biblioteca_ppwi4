@@ -1,0 +1,32 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" 
+    xmlns:th="http://www.thymeleaf.org"
+    xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout">
+    
+<head>
+    <meta charset="UTF-8"/>
+    <title>Cadastro Usuário</title>
+    <link rel="stylesheet" type="text/css" th:href="@{/css/main.css}"></link>
+	<link rel="stylesheet" type="text/css" th:href="@{/css/font-awesome/css/font-awesome.css}"></link>
+</head>
+
+<body class="app sidebar-mini rtl">
+ 	
+ 	<header th:replace="fragments/header :: header"></header>
+ 
+ 	<aside>
+ 		<nav th:replace="fragments/sidebar :: nav-sidebar"></nav>
+ 	</aside>
+ 	
+ 	<div class="app-content">
+ 		<section layout:fragment="content"></section>
+ 	</div>
+ 
+	<script type="text/javascript" th:src="@{/js/jquery/jquery-3.4.1.js}"></script>
+	<script type="text/javascript" th:src="@{/js/bootstrap/bootstrap.js}"></script>
+	<script type="text/javascript" th:src="@{/js/main.js}"></script>
+		
+	<th:block layout:fragment="javascript-extra"></th:block>	
+		
+</body>
+</html>
