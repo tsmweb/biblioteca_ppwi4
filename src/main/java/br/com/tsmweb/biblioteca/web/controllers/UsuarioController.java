@@ -15,10 +15,14 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.servlet.ModelAndView;
 
+import br.com.tsmweb.biblioteca.models.config.ConfigProjeto;
 import br.com.tsmweb.biblioteca.models.model.Departamento;
 import br.com.tsmweb.biblioteca.models.model.Usuario;
+import br.com.tsmweb.biblioteca.models.repository.filtros.UsuarioFiltro;
 import br.com.tsmweb.biblioteca.models.service.DepartamentoService;
 import br.com.tsmweb.biblioteca.models.service.UsuarioService;
+import br.com.tsmweb.biblioteca.models.service.exception.ConfirmPasswordNaoInformadoException;
+import br.com.tsmweb.biblioteca.models.service.exception.EmailCadastradoException;
 
 @Controller
 @RequestMapping(value = "/usuario")
@@ -31,8 +35,11 @@ public class UsuarioController {
 	private DepartamentoService departamentoService;
 
 	@GetMapping(value = "/listar")
-	public ModelAndView listarUsuario() {
+	public ModelAndView listarUsuario(UsuarioFiltro usuarioFiltro) {
 		ModelAndView mv = new ModelAndView("/usuario/listar");
+		mv.addObject("usuarioFiltro", usuarioFiltro);
+		mv.addObject("pageSizes", ConfigProjeto.PAGE_SIZES);
+		mv.addObject("size", ConfigProjeto.SIZE);
 		mv.addObject("usuarios", usuarioService.findAll());
 		
 		return mv;		
@@ -51,8 +58,12 @@ public class UsuarioController {
 		
 		try {
 			usuarioService.save(usuario);
-		} catch(Exception e) {
-			e.printStackTrace();
+		} catch(EmailCadastradoException e) {
+			result.rejectValue("email", e.getMessage(), e.getMessage());
+			return "usuario/cadastrar";
+		} catch(ConfirmPasswordNaoInformadoException e) {
+			result.rejectValue("confirmPassword", e.getMessage(), e.getMessage());
+			return "usuario/cadastrar";
 		}
 		
 		return "redirect:/usuario/listar";

@@ -1,7 +1,9 @@
 package br.com.tsmweb.biblioteca.models.model;
 
 import java.io.Serializable;
+import java.util.ArrayList;
 import java.util.Date;
+import java.util.List;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;
@@ -10,15 +12,16 @@ import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.JoinColumn;
+import javax.persistence.JoinTable;
+import javax.persistence.ManyToMany;
 import javax.persistence.ManyToOne;
 import javax.persistence.Table;
 import javax.persistence.Temporal;
 import javax.persistence.TemporalType;
 import javax.persistence.Transient;
-import javax.validation.constraints.Max;
-import javax.validation.constraints.Min;
 import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.NotNull;
+import javax.validation.constraints.Size;
 
 import org.springframework.format.annotation.DateTimeFormat;
 
@@ -30,18 +33,16 @@ public class Usuario implements Serializable {
 
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
-	@Column(name = "ID")
+	@Column(name = "USUARIO_ID")
 	private Long id;
 	
-	@Min(value = 10)
-	@Max(value = 100)
+	@Size(min = 3, max = 100, message="Digite o mínimo {min} e o máximo {max} caracteres")
 	@NotBlank(message = "o campo nome do usuário é obrigatório")
 	@NotNull(message = "o campo nome do usuário é obrigatório")
 	@Column(name = "USER_NAME", length = 100, nullable = false)
 	private String username;
 	
-	@Min(value = 4)
-	@Max(value = 100)
+	@Size(min = 4, max = 100, message="Digite o mínimo {min} e o máximo {max} caracteres")
 	@NotBlank(message = "o campo senha do usuário é obrigatório")
 	@NotNull(message = "o campo senha do usuário é obrigatório")
 	@Column(name = "PASSWORD", length = 100, nullable = false)
@@ -52,7 +53,7 @@ public class Usuario implements Serializable {
 	@Transient
 	private String confirmPassword;
 	
-	@Max(value = 100)
+	@Size(min = 10, max = 100, message="Digite o mínimo {min} e o máximo {max} caracteres")
 	@NotBlank(message = "o campo e-mail do usuário é obrigatório")
 	@NotNull(message = "o campo e-mail do usuário é obrigatório")
 	@Column(name = "EMAIL", length = 100, nullable = false, unique = true)
@@ -75,15 +76,18 @@ public class Usuario implements Serializable {
 	@Column(name = "CONTENT_TYPE", length = 30, nullable = true)
 	private String contentType;
 	
-	@Column(name = "ADMIN", nullable = true)
-	private boolean admin;
-	
-	@ManyToOne(fetch = FetchType.EAGER)
+	@ManyToOne(fetch = FetchType.LAZY)
 	@JoinColumn(name = "DEPARTAMENTO_ID", nullable = false)
 	private Departamento departamento;
 	
+	@ManyToMany(fetch = FetchType.EAGER)
+	@JoinTable(name = "USUARIO_ROLE", 
+		joinColumns = @JoinColumn(name = "USUARIO_ID"), 
+		inverseJoinColumns = @JoinColumn(name = "ROLE_ID"))
+	private List<Role> roles = new ArrayList<>();
+	
 	public Usuario(Long id, String username, String password, String confirmPassword, String email, boolean active,
-			Integer failedLogin, Date lastLogin, String photo, String contentType, Boolean admin, Departamento departamento) {
+			Integer failedLogin, Date lastLogin, String photo, String contentType, Departamento departamento) {
 		this.id = id;
 		this.username = username;
 		this.password = password;
@@ -94,7 +98,6 @@ public class Usuario implements Serializable {
 		this.lastLogin = lastLogin;
 		this.photo = photo;
 		this.contentType = contentType;
-		this.admin = admin;
 		this.departamento = departamento;
 	}
 
@@ -180,20 +183,20 @@ public class Usuario implements Serializable {
 		this.contentType = contentType;
 	}
 
-	public boolean isAdmin() {
-		return admin;
-	}
-
-	public void setAdmin(boolean admin) {
-		this.admin = admin;
-	}
-
 	public Departamento getDepartamento() {
 		return departamento;
 	}
 
 	public void setDepartamento(Departamento departamento) {
 		this.departamento = departamento;
+	}
+
+	public List<Role> getRoles() {
+		return roles;
+	}
+
+	public void setRoles(List<Role> roles) {
+		this.roles = roles;
 	}
 
 	@Override
@@ -225,7 +228,7 @@ public class Usuario implements Serializable {
 	public String toString() {
 		return "Usuario [id=" + id + ", username=" + username + ", password=" + password + ", confirmPassword="
 				+ confirmPassword + ", email=" + email + ", active=" + active + ", failedLogin=" + failedLogin
-				+ ", lastLogin=" + lastLogin + ", photo=" + photo + ", contentType=" + contentType + ", admin=" + admin
+				+ ", lastLogin=" + lastLogin + ", photo=" + photo + ", contentType=" + contentType
 				+ ", departamento=" + departamento + "]";
 	}
 

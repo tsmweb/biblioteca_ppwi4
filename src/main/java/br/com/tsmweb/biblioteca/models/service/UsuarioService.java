@@ -9,6 +9,8 @@ import org.springframework.transaction.annotation.Transactional;
 
 import br.com.tsmweb.biblioteca.models.model.Usuario;
 import br.com.tsmweb.biblioteca.models.repository.UsuarioRepository;
+import br.com.tsmweb.biblioteca.models.service.exception.ConfirmPasswordNaoInformadoException;
+import br.com.tsmweb.biblioteca.models.service.exception.EmailCadastradoException;
 
 @Service
 @Transactional
@@ -21,11 +23,11 @@ public class UsuarioService {
 		Optional<Usuario> usuarioCadastrado = findUsuarioByEmail(usuario.getEmail());
 		
 		if (usuarioCadastrado.isPresent() && !usuarioCadastrado.get().equals(usuario)) {
-			throw new RuntimeException("O e-mail já está cadastrado");
+			throw new EmailCadastradoException("O e-mail já está cadastrado");
 		}
 		
 		if (usuario.getConfirmPassword().equals("")) {
-			throw new RuntimeException("O campo confirme Senha deve ser preenchido");
+			throw new ConfirmPasswordNaoInformadoException("O campo Confirme Senha deve ser preenchido");
 		}
 		
 		return usuarioRepository.save(usuario);

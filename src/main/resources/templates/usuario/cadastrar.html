@@ -28,6 +28,13 @@
 			        	method="POST" 
 			        	th:object="${usuario}">
 			        	
+			        	<div class="row">
+			        		<div class="col-xs-12 col-sm-12 col-md-12">
+			        			<div th:replace="fragments/validacao :: validacao"></div>
+			        			<div th:replace="fragments/alert"></div>
+			        		</div>
+			        	</div>
+			        	
 			        	<input type="hidden" 
 			        		id="id" 
 			        		name="id" 
