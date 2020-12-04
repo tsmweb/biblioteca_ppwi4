@@ -6,7 +6,7 @@
     
 <head>
 	<meta charset="UTF-8">
-	<title>Usuários</title>
+	<title>Departamentos</title>
 </head>
 
 <body>
@@ -15,7 +15,7 @@
 	
 		<div class="container">
 			<div class="app-title">
-				<h1><i class="fa fa-edit">Cadastro de Usuários</i></h1>
+				<h1><i class="fa fa-edit">Cadastro de Departamentos</i></h1>
 				<ul class="app-breadcrumb breadcrumb">
 					<li class="breadcrumb-item"><i class="fa fa-search fa-lg"></i></li>
 					<li class="breadcrumb-item"><a href="#">Menu</a></li>
@@ -26,7 +26,7 @@
 				<div class="tile">
 					<div class="tile-body">
 					
-						<form class="form-inline" method="GET" th:object="${usuarioFiltro}">
+						<form class="form-inline" method="GET" th:object="${departamentoFiltro}">
 							<div class="col-xs-12 col-sm-12">
 								<div class="form-group">
 									<label class="control-label col-sm-1">Nome:</label>
@@ -72,24 +72,22 @@
 							<tr>
 								<th>ID</th>
 								<th>Nome</th>
-								<th>E-mail</th>
 								<th>Ações</th>
 							</tr>
 						</thead>
 						
 						<tbody>
-							<tr th:each="usuario : ${usuarios}">
-								<td th:text="${usuario.id}"></td>
-								<td th:text="${usuario.username}"></td>
-								<td th:text="${usuario.email}"></td>
+							<tr th:each="departamento : ${departamentos}">
+								<td th:text="${departamento.id}"></td>
+								<td th:text="${departamento.name}"></td>
 								<td>
-									<a class="btn btn-sm btn-info" th:href="@{/usuario/alterar/{id} (id=${usuario.id})}">
+									<a class="btn btn-sm btn-info" th:href="@{/departamento/alterar/{id} (id=${departamento.id})}">
 										<i class="fa fa-pencil"></i>
 									</a>
-									<a class="btn btn-sm btn-danger" th:href="@{/usuario/excluir/{id} (id=${usuario.id})}">
+									<a class="btn btn-sm btn-danger" th:href="@{/departamento/excluir/{id} (id=${departamento.id})}">
 										<i class="fa fa-trash"></i>
 									</a> 
-									<a class="btn btn-sm btn-primary" th:href="@{/usuario/consultar/{id} (id=${usuario.id})}">
+									<a class="btn btn-sm btn-primary" th:href="@{/departamento/consultar/{id} (id=${departamento.id})}">
 										<i class="fa fa-search"></i>
 									</a>
 								</td>
@@ -97,7 +95,7 @@
 						</tbody>
 					</table>
 					
-					<a class="btn btn-sm btn-success" th:href="@{/usuario/cadastrar}">
+					<a class="btn btn-sm btn-success" th:href="@{/departamento/cadastrar}">
 						<i class="fa fa-plus-circle"></i>
 					</a>
 		
@@ -115,7 +113,7 @@
     	
     	function changePageAndSize() {
     		$('#pageSizeSelect').change(function(event){
-    			window.location.replace("/usuario/listar?size="+this.value+"&page=0")
+    			window.location.replace("/departamento/listar?size="+this.value+"&page=0")
     		});
     	}
     </th:block>	

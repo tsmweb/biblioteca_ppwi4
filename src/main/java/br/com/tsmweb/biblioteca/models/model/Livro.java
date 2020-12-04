@@ -11,6 +11,11 @@ import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
 import javax.persistence.Table;
+import javax.validation.constraints.NotBlank;
+import javax.validation.constraints.NotEmpty;
+import javax.validation.constraints.NotNull;
+import javax.validation.constraints.Positive;
+import javax.validation.constraints.Size;
 
 @Entity
 @Table(name = "LIVRO")
@@ -23,22 +28,37 @@ public class Livro implements Serializable  {
 	@Column(name = "ID")
 	private Long id;
 	
+	@NotNull(message = "A editora do livro é obrigatório")
 	@ManyToOne(fetch = FetchType.EAGER)
 	@JoinColumn(name = "PUBLISHER_ID", nullable = false)
 	private Editora publisher;
 	
+	@Size(min = 10, max = 100, message="Digite o mínimo {min} e o máximo {max} caracteres")
+	@NotEmpty(message = "O título do livro é obrigatório")
+	@NotBlank(message = "O título do livro é obrigatório")
+	@NotNull(message = "O título do livro é obrigatório")
 	@Column(name = "TITLE", length = 100, nullable = false)
 	private String title;
 	
+	@Size(min = 3, max = 100, message="Digite o mínimo {min} e o máximo {max} caracteres")
+	@NotEmpty(message = "O autor do livro é obrigatório")
+	@NotBlank(message = "O autor do livro é obrigatório")
+	@NotNull(message = "O autor do livro é obrigatório")
 	@Column(name = "AUTHOR", length = 100, nullable = false)
 	private String author;
 	
+	@Positive(message = "Digite um número maior que 0")
+	@NotNull(message = "O número de páginas do livro é obrigatório")
 	@Column(name = "NUMBER_PAGES", nullable = false)
 	private Integer numberPages;
 	
+	@Positive(message = "Digite um número maior que 0")
+	@NotNull(message = "O ano da publicação do livro é obrigatório")
 	@Column(name = "YEAR_PUBLICATION", nullable = false)
 	private Integer yearPublication;
 	
+	@Positive(message = "Digite um número maior que 0")
+	@NotNull(message = "A quantidade total de livros é obrigatório")
 	@Column(name = "TOTAL_AMOUNT", nullable = false)
 	private Integer totalAmount;
 

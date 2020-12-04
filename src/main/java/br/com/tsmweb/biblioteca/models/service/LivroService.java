@@ -20,8 +20,8 @@ public class LivroService {
 		return livroRepository.save(livro);
 	}
 	
-	public void update(Livro livro) {
-		save(livro);
+	public Livro update(Livro livro) {
+		return save(livro);
 	}
 	
 	public void deleteById(Long id) {

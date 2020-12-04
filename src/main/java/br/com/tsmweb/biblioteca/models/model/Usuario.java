@@ -20,6 +20,7 @@ import javax.persistence.Temporal;
 import javax.persistence.TemporalType;
 import javax.persistence.Transient;
 import javax.validation.constraints.NotBlank;
+import javax.validation.constraints.NotEmpty;
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Size;
 
@@ -37,25 +38,26 @@ public class Usuario implements Serializable {
 	private Long id;
 	
 	@Size(min = 3, max = 100, message="Digite o mínimo {min} e o máximo {max} caracteres")
-	@NotBlank(message = "o campo nome do usuário é obrigatório")
-	@NotNull(message = "o campo nome do usuário é obrigatório")
+	@NotEmpty(message = "O nome do usuário é obrigatório")
+	@NotBlank(message = "O nome do usuário é obrigatório")
+	@NotNull(message = "O nome do usuário é obrigatório")
 	@Column(name = "USER_NAME", length = 100, nullable = false)
 	private String username;
 	
 	@Size(min = 4, max = 100, message="Digite o mínimo {min} e o máximo {max} caracteres")
-	@NotBlank(message = "o campo senha do usuário é obrigatório")
-	@NotNull(message = "o campo senha do usuário é obrigatório")
+	@NotEmpty(message = "A senha do usuário é obrigatório")
+	@NotBlank(message = "A senha do usuário é obrigatório")
+	@NotNull(message = "A senha do usuário é obrigatório")
 	@Column(name = "PASSWORD", length = 100, nullable = false)
 	private String password;
 	
-	@NotBlank(message = "o campo confirmação de senha do usuário é obrigatório")
-	@NotNull(message = "o campo confirmação de senha do usuário é obrigatório")
 	@Transient
 	private String confirmPassword;
 	
 	@Size(min = 10, max = 100, message="Digite o mínimo {min} e o máximo {max} caracteres")
-	@NotBlank(message = "o campo e-mail do usuário é obrigatório")
-	@NotNull(message = "o campo e-mail do usuário é obrigatório")
+	@NotEmpty(message = "O e-mail do usuário é obrigatório")
+	@NotBlank(message = "O e-mail do usuário é obrigatório")
+	@NotNull(message = "O e-mail do usuário é obrigatório")
 	@Column(name = "EMAIL", length = 100, nullable = false, unique = true)
 	private String email;
 	

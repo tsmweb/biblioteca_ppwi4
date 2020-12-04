@@ -24,8 +24,7 @@
 			<div class="tile">
 				<div class="tile-body">
 
-			      <form th:action="@{/usuario/incluir}" method="POST" th:object="${usuario}">
-			      	<input type="hidden" id="id" name="id" th:field="*{id}" />
+			      <form th:object="${usuario}">
 			      
 			      		<div class="row">
 			        		<div class="col-xs-12 col-sm-12 col-md-12">

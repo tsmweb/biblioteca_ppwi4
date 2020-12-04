@@ -1,0 +1,73 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" 
+    xmlns:th="http://www.thymeleaf.org"
+    xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+    layout:decorate="~{layout}">
+    
+<head>
+    <meta charset="UTF-8"/>
+    <title>Cadastro Departamento</title>
+</head>
+
+<body>
+	<section layout:fragment="content">
+    
+ 		<div class="container">
+			<div class="app-title">
+				<h1><i class="fa fa-edit">Cadastro de Departamentos</i></h1>
+				<ul class="app-breadcrumb breadcrumb">
+					<li class="breadcrumb-item"><i class="fa fa-search fa-lg"></i></li>
+					<li class="breadcrumb-item"><a th:href="@{/departamento/listar}">Pesquisa de Departamento</a></li>
+				</ul>
+			</div>
+
+			<div class="tile">
+				<div class="tile-body">
+			
+			        <form th:action="${departamento.id == null} ? @{/departamento/incluir} : @{/departamento/alterar}" 
+			        	method="POST" 
+			        	th:object="${departamento}">
+			        	
+			        	<div class="row">
+			        		<div class="col-xs-12 col-sm-12 col-md-12">
+			        			<div th:replace="fragments/validacao :: validacao"></div>
+			        			<div th:replace="fragments/alert"></div>
+			        		</div>
+			        	</div>
+			        	
+			        	<input type="hidden" 
+			        		id="id" 
+			        		name="id" 
+			        		th:field="*{id}" />
+			        
+			        	<div class="row">
+			        		<div class="col-xs-12 col-sm-12 col-md-12">
+			        			<div class="form-group">
+						            <label class="control-label">Nome</label>
+						            <input type="text" 
+						            	id="name" 
+						            	name="name" 
+						            	th:field="*{name}"
+						            	th:classappend="${#fields.hasErrors('name')} ? 'is-invalid'"
+						             	class="form-control" />
+						             
+						             <div class="invalid-feedback">
+						             	<span th:errors="*{name}"></span>
+						             </div>
+					            </div>
+				            </div>
+						</div>
+
+			            <div class="tile-footer">
+			            	<button type="submit" class="btn btn-primary">Salvar</button>
+			            	<a th:href="@{/departamento/listar}" class="btn btn-warning">Cancelar</a>
+			            </div>
+			        </form>
+				</div>
+			</div>
+	     </div>
+     
+    </section>
+    
+</body>
+</html>

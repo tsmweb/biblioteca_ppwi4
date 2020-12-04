@@ -8,6 +8,10 @@ import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.Table;
+import javax.validation.constraints.NotBlank;
+import javax.validation.constraints.NotEmpty;
+import javax.validation.constraints.NotNull;
+import javax.validation.constraints.Size;
 
 @Entity
 @Table(name = "EDITORA")
@@ -20,6 +24,10 @@ public class Editora implements Serializable {
 	@Column(name = "ID")
 	private Long id;
 	
+	@Size(min = 3, max = 100, message="Digite o mínimo {min} e o máximo {max} caracteres")
+	@NotEmpty(message = "O nome da editora é obrigatório")
+	@NotBlank(message = "O nome da editora é obrigatório")
+	@NotNull(message = "O nome da editora é obrigatório")
 	@Column(name = "NAME", length = 100, nullable = false)
 	private String name;
 	

@@ -1,0 +1,166 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" 
+    xmlns:th="http://www.thymeleaf.org"
+    xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+    layout:decorate="~{layout}">
+    
+<head>
+    <meta charset="UTF-8"/>
+    <title>Cadastro Livro</title>
+</head>
+
+<body>
+	<section layout:fragment="content">
+    
+ 		<div class="container">
+			<div class="app-title">
+				<h1><i class="fa fa-edit">Cadastro de Livros</i></h1>
+				<ul class="app-breadcrumb breadcrumb">
+					<li class="breadcrumb-item"><i class="fa fa-search fa-lg"></i></li>
+					<li class="breadcrumb-item"><a th:href="@{/livro/listar}">Pesquisa de Livro</a></li>
+				</ul>
+			</div>
+
+			<div class="tile">
+				<div class="tile-body">
+			
+			        <form th:action="${livro.id == null} ? @{/livro/incluir} : @{/livro/alterar}" 
+			        	method="POST" 
+			        	th:object="${livro}">
+			        	
+			        	<div class="row">
+			        		<div class="col-xs-12 col-sm-12 col-md-12">
+			        			<div th:replace="fragments/validacao :: validacao"></div>
+			        			<div th:replace="fragments/alert"></div>
+			        		</div>
+			        	</div>
+			        	
+			        	<input type="hidden" 
+			        		id="id" 
+			        		name="id" 
+			        		th:field="*{id}" />
+			        
+			        	<div class="row">
+			        		<div class="col-xs-12 col-sm-12 col-md-12">
+			        			<div class="form-group">
+						            <label class="control-label">Título</label>
+						            <input type="text" 
+						            	id="title" 
+						            	name="title" 
+						            	th:field="*{title}"
+						            	th:classappend="${#fields.hasErrors('title')} ? 'is-invalid'"
+						             	class="form-control" />
+						             
+						             <div class="invalid-feedback">
+						             	<span th:errors="*{title}"></span>
+						             </div>
+					            </div>
+				            </div>
+						</div>
+						
+						<div class="row">
+			        		<div class="col-xs-12 col-sm-12 col-md-12">
+			        			<div class="form-group">
+						            <label class="control-label">Autor</label>
+						            <input type="text" 
+						            	id="author" 
+						            	name="author" 
+						            	th:field="*{author}" 
+						            	th:classappend="${#fields.hasErrors('author')} ? 'is-invalid'"
+						            	class="form-control" />
+						            
+						            <div class="invalid-feedback">
+						             	<span th:errors="*{author}"></span>
+						            </div>
+						        </div>
+						    </div>
+						</div>
+						
+						<div class="row">
+							<div class="col-xs-12 col-sm-12 col-md-12">
+								<div class="form-group">
+									<label class="control-label">Editora</label> 
+									<select
+										id="selectEditora" name="selectEditora"
+										th:field="*{publisher}"
+										class="form-control" >
+										<option value="">Selecione uma Editora</option>
+										<option th:each="editora : ${editoras}" 
+												th:value="${editora.id}"
+												th:text="${editora.name}"
+												th:classappend="${#fields.hasErrors('publisher.id')} ? 'is-invalid'"></option>
+									</select>	
+									<div class="invalid-feedback">
+										<span th:errors="*{publisher}"></span>
+									</div>
+								</div>
+							</div>
+						</div>
+						
+						<div class="row">
+			        		<div class="col-xs-12 col-sm-12 col-md-12">
+			        			<div class="form-group">
+						            <label class="control-label">Páginas</label>
+						            <input type="number" 
+						            	id="numberPages" 
+						            	name="numberPages" 
+						            	th:field="*{numberPages}" 
+						            	th:classappend="${#fields.hasErrors('numberPages')} ? 'is-invalid'"
+						            	class="form-control" />
+						            
+						            <div class="invalid-feedback">
+						             	<span th:errors="*{numberPages}"></span>
+						            </div>
+						 		</div>
+						    </div>
+						</div>
+						
+						<div class="row">
+			        		<div class="col-xs-12 col-sm-12 col-md-12">
+			        			<div class="form-group">
+						            <label class="control-label">Ano Publicação</label>
+						            <input type="number" 
+						            	id="yearPublication" 
+						            	name="yearPublication" 
+						            	th:field="*{yearPublication}" 
+						            	th:classappend="${#fields.hasErrors('yearPublication')} ? 'is-invalid'"
+						            	class="form-control" />
+						            	
+						            <div class="invalid-feedback">
+						             	<span th:errors="*{yearPublication}"></span>
+						            </div>
+						        </div>
+						    </div>
+						</div>
+						
+						<div class="row">
+			        		<div class="col-xs-12 col-sm-12 col-md-12">
+			        			<div class="form-group">
+						            <label class="control-label">Quantidade Total</label>
+						            <input type="number" 
+						            	id="totalAmount" 
+						            	name="totalAmount" 
+						            	th:field="*{totalAmount}" 
+						            	th:classappend="${#fields.hasErrors('totalAmount')} ? 'is-invalid'"
+						            	class="form-control" />
+						            	
+						            <div class="invalid-feedback">
+						             	<span th:errors="*{totalAmount}"></span>
+						            </div>
+						        </div>
+						    </div>
+						</div>
+			
+			            <div class="tile-footer">
+			            	<button type="submit" class="btn btn-primary">Salvar</button>
+			            	<a th:href="@{/livro/listar}" class="btn btn-warning">Cancelar</a>
+			            </div>
+			        </form>
+				</div>
+			</div>
+	     </div>
+     
+    </section>
+    
+</body>
+</html>

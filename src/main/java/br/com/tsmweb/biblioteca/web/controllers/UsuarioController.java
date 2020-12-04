@@ -45,7 +45,7 @@ public class UsuarioController {
 		return mv;		
 	}
 	
-	@GetMapping(value = "/cadastro")
+	@GetMapping(value = "/cadastrar")
 	public String cadastroUsuario(Usuario usuario) {
 		return "/usuario/cadastrar";
 	}
@@ -60,10 +60,10 @@ public class UsuarioController {
 			usuarioService.save(usuario);
 		} catch(EmailCadastradoException e) {
 			result.rejectValue("email", e.getMessage(), e.getMessage());
-			return "usuario/cadastrar";
+			return "/usuario/cadastrar";
 		} catch(ConfirmPasswordNaoInformadoException e) {
 			result.rejectValue("confirmPassword", e.getMessage(), e.getMessage());
-			return "usuario/cadastrar";
+			return "/usuario/cadastrar";
 		}
 		
 		return "redirect:/usuario/listar";
@@ -81,10 +81,15 @@ public class UsuarioController {
 	public String alterarUsuario(@Valid Usuario usuario, BindingResult result, Model model) {
 		if (result.hasErrors()) {
 			model.addAttribute("usuario", usuario);
-			return "/usuario/cadastro";	
+			return "/usuario/cadastrar";	
 		}
 		
-		usuario = usuarioService.update(usuario);
+		try {
+			usuario = usuarioService.update(usuario);
+		} catch(ConfirmPasswordNaoInformadoException e) {
+			result.rejectValue("confirmPassword", e.getMessage(), e.getMessage());
+			return "/usuario/cadastrar";
+		}
 		
 		return "redirect:/usuario/listar";
 	}

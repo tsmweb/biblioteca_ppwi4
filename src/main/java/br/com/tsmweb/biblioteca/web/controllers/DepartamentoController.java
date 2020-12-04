@@ -12,7 +12,9 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.servlet.ModelAndView;
 
+import br.com.tsmweb.biblioteca.models.config.ConfigProjeto;
 import br.com.tsmweb.biblioteca.models.model.Departamento;
+import br.com.tsmweb.biblioteca.models.repository.filtros.DepartamentoFiltro;
 import br.com.tsmweb.biblioteca.models.service.DepartamentoService;
 
 @Controller
@@ -23,22 +25,25 @@ public class DepartamentoController {
 	private DepartamentoService departamentoService;
 
 	@GetMapping(value="/listar")
-	public ModelAndView listarDepartamento() {
+	public ModelAndView listarDepartamento(DepartamentoFiltro departamentoFiltro) {
 		ModelAndView mv = new ModelAndView("/departamento/listar");
+		mv.addObject("departamentoFiltro", departamentoFiltro);
+		mv.addObject("pageSizes", ConfigProjeto.PAGE_SIZES);
+		mv.addObject("size", ConfigProjeto.SIZE);
 		mv.addObject("departamentos", departamentoService.findAll());
 		
 		return mv;
 	}    
 	
-	@GetMapping(value="/cadastro")
+	@GetMapping(value="/cadastrar")
 	public String cadastroDepartamento(Departamento departamento) {
-		return "/departamento/cadastro";
+		return "/departamento/cadastrar";
 	}
 	
 	@PostMapping(value="/incluir")
 	public String inserirDepartamento(@Valid Departamento departamento, BindingResult result) {
 		if (result.hasErrors()) {
-			return "/departamento/cadastro";
+			return "/departamento/cadastrar";
 		}
 		
 		departamentoService.save(departamento);
@@ -51,14 +56,14 @@ public class DepartamentoController {
 		Departamento departamento = departamentoService.findById(id);
 		model.addAttribute("departamento", departamento);
 		
-		return "/departamento/cadastro";
+		return "/departamento/cadastrar";
 	}
 	
 	@PostMapping(value="/alterar")
 	public String salvarEdicaoDepartamento(@Valid Departamento departamento, BindingResult result, Model model) {
 		if (result.hasErrors() ) {
 			model.addAttribute("departamento", departamento);
-			return "/departamento/cadastro";
+			return "/departamento/cadastrar";
 		}
 		
 		departamento = departamentoService.update(departamento);

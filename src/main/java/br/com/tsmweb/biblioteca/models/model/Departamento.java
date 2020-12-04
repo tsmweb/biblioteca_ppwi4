@@ -11,9 +11,10 @@ import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.OneToMany;
 import javax.persistence.Table;
-import javax.validation.constraints.Max;
 import javax.validation.constraints.NotBlank;
+import javax.validation.constraints.NotEmpty;
 import javax.validation.constraints.NotNull;
+import javax.validation.constraints.Size;
 
 @Entity
 @Table(name = "DEPARTAMENTO")
@@ -26,9 +27,10 @@ public class Departamento implements Serializable {
 	@Column(name = "ID")
 	private Long id;
 	
-	@Max(value = 50)
-	@NotBlank(message = "o campo nome do departamento é obrigatório")
-	@NotNull(message = "o campo nome do departamento é obrigatório")
+	@Size(min = 2, max = 50, message="Digite o mínimo {min} e o máximo {max} caracteres")
+	@NotEmpty(message = "O nome do departamento é obrigatório")
+	@NotBlank(message = "O nome do departamento é obrigatório")
+	@NotNull(message = "O nome do departamento é obrigatório")
 	@Column(name = "NAME", length = 50, nullable = false)
 	private String name;
 	
