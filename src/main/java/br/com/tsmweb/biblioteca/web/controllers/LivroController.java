@@ -1,10 +1,15 @@
 package br.com.tsmweb.biblioteca.web.controllers;
 
+import java.io.ByteArrayInputStream;
 import java.util.List;
 
+import javax.servlet.http.HttpServletRequest;
 import javax.validation.Valid;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.core.io.InputStreamResource;
+import org.springframework.http.MediaType;
+import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
@@ -18,6 +23,7 @@ import org.springframework.web.servlet.ModelAndView;
 import br.com.tsmweb.biblioteca.models.config.ConfigProjeto;
 import br.com.tsmweb.biblioteca.models.model.Editora;
 import br.com.tsmweb.biblioteca.models.model.Livro;
+import br.com.tsmweb.biblioteca.models.reports.LivroReportPdf;
 import br.com.tsmweb.biblioteca.models.repository.filtros.LivroFiltro;
 import br.com.tsmweb.biblioteca.models.service.EditoraService;
 import br.com.tsmweb.biblioteca.models.service.LivroService;
@@ -31,6 +37,9 @@ public class LivroController {
 	
 	@Autowired
 	private EditoraService editoraService;
+	
+	@Autowired
+	private LivroReportPdf livroReportPdf;
 	
 	@GetMapping(value = "/listar")
 	public ModelAndView listarLivro(LivroFiltro livroFiltro) {
@@ -92,6 +101,17 @@ public class LivroController {
 		mv.addObject("livro", livroService.findById(id));
 		
 		return mv;	
+	}
+	
+	@GetMapping(value = "/relatorio")
+	public ResponseEntity<InputStreamResource> imprimirRelatorioPdf(HttpServletRequest request) {
+		List<Livro> listaLivro = livroService.findAll();
+		ByteArrayInputStream pdf = livroReportPdf.generateReport(request, listaLivro);
+		
+		return ResponseEntity.ok()
+				.header("Content-Disposition", "inline; filename=report.pdf")
+				.contentType(MediaType.APPLICATION_PDF)
+				.body(new InputStreamResource(pdf));
 	}
 	
 	@ModelAttribute("editoras")
