@@ -4,11 +4,14 @@ import java.util.List;
 import java.util.Optional;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import br.com.tsmweb.biblioteca.models.model.Usuario;
 import br.com.tsmweb.biblioteca.models.repository.UsuarioRepository;
+import br.com.tsmweb.biblioteca.models.repository.filtros.UsuarioFiltro;
 import br.com.tsmweb.biblioteca.models.service.exception.ConfirmPasswordNaoInformadoException;
 import br.com.tsmweb.biblioteca.models.service.exception.EmailCadastradoException;
 
@@ -55,4 +58,8 @@ public class UsuarioService {
 		return usuarioRepository.findUsuarioByEmail(email);
 	}
 
+	public Page<Usuario> listUsuarioByPage(UsuarioFiltro usuarioFiltro, Pageable pageable) {
+		return usuarioRepository.listUsuarioByPage(usuarioFiltro, pageable);
+	}
+	
 }

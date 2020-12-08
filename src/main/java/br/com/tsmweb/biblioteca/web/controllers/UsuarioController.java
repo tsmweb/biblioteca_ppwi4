@@ -2,12 +2,17 @@ package br.com.tsmweb.biblioteca.web.controllers;
 
 import java.io.ByteArrayInputStream;
 import java.util.List;
+import java.util.Optional;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.validation.Valid;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.core.io.InputStreamResource;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
@@ -18,6 +23,7 @@ import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.servlet.ModelAndView;
 
 import br.com.tsmweb.biblioteca.models.config.ConfigProjeto;
@@ -25,6 +31,7 @@ import br.com.tsmweb.biblioteca.models.model.Departamento;
 import br.com.tsmweb.biblioteca.models.model.Usuario;
 import br.com.tsmweb.biblioteca.models.reports.UsuarioReportPdf;
 import br.com.tsmweb.biblioteca.models.repository.filtros.UsuarioFiltro;
+import br.com.tsmweb.biblioteca.models.repository.pagination.Pagina;
 import br.com.tsmweb.biblioteca.models.service.DepartamentoService;
 import br.com.tsmweb.biblioteca.models.service.UsuarioService;
 import br.com.tsmweb.biblioteca.models.service.exception.ConfirmPasswordNaoInformadoException;
@@ -44,12 +51,24 @@ public class UsuarioController {
 	private UsuarioReportPdf usuarioReportPdf;
 
 	@GetMapping(value = "/listar")
-	public ModelAndView listarUsuario(UsuarioFiltro usuarioFiltro) {
+	public ModelAndView listarUsuario(UsuarioFiltro usuarioFiltro, 
+			HttpServletRequest request,
+			@RequestParam(value = "size", required = false) Optional<Integer> size,
+			@RequestParam(value = "page", required = false) Optional<Integer> page) {
+		
+		Pageable pageable = PageRequest.of(page.orElse(ConfigProjeto.INITIAL_PAGE), 
+										size.orElse(ConfigProjeto.SIZE),
+										Sort.Direction.ASC, "id");
+		
+		Page<Usuario> listaUsuario = usuarioService.listUsuarioByPage(usuarioFiltro, pageable);
+		
+		Pagina<Usuario> pagina = new Pagina<>(listaUsuario, size.orElse(ConfigProjeto.SIZE), request);
+		
 		ModelAndView mv = new ModelAndView("/usuario/listar");
 		mv.addObject("usuarioFiltro", usuarioFiltro);
 		mv.addObject("pageSizes", ConfigProjeto.PAGE_SIZES);
-		mv.addObject("size", ConfigProjeto.SIZE);
-		mv.addObject("usuarios", usuarioService.findAll());
+		mv.addObject("size", size.orElse(ConfigProjeto.SIZE));
+		mv.addObject("pagina", pagina);
 		
 		return mv;		
 	}

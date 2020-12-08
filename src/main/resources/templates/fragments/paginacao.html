@@ -1,0 +1,70 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:th="http://www.thymeleaf.org">
+<head>
+<meta charset="UTF-8">
+</head>
+<body>
+
+	<div class="box-footer clearfix" th:fragment="pagination">
+		<div class="row">
+			<div class="col-xs-12 col-md-5">
+				<div class="pagination">
+					<p>
+						Mostrando <span class="badge"
+							th:text="${pagina.size * (pagina.number-1) + 1}"></span> de <span
+							class="badge"
+							th:text="${pagina.ultima ? pagina.totalElementos : pagina.size * (pagina.number-1)+ pagina.size}"></span>
+						de <span class="badge" th:text="${pagina.totalElementos}"></span>
+						Registros Cadastrados.
+					</p>
+				</div>
+			</div>
+			<div class="col-xs-12 col-md-7" th:if="${not pagina.vazia}">
+				<ul class='pagination pull-right'>
+					<li th:class="${pagina.primeira}?'disabled':''"><span
+						th:if='${pagina.primeira}' th:class="page-link">← Primeira</span>
+
+						<a th:if='${not pagina.primeira}'
+						th:href='@{${pagina.urlParaPagina(size, 0, sort, dir)}}'
+						th:class="page-link"> ← Primeira </a></li>
+
+					<li th:class="${pagina.hasPreviousPage}? '' : 'disabled'"><span
+						th:if='${not pagina.hasPreviousPage}' th:class="page-link">
+							<span class="fa fa-chevron-left"></span>
+					</span> <a th:if='${pagina.hasPreviousPage}'
+						th:href='@{${pagina.urlParaPagina(size, pagina.number-2, sort, dir)}}'
+						th:class="page-link" title='Go to previous pagina'> <span
+							class="fa fa-chevron-left"></span>
+					</a></li>
+
+					<li th:each='item : ${pagina.items}'
+						th:class="${item.current}? 'page-item active' : ''"><span
+						th:if='${item.current}' th:text='${item.number}'
+						th:class="page-link">1</span> <a th:if='${not item.current}'
+						th:class="page-link"
+						th:href='@{${pagina.urlParaPagina(size, item.number-1, sort, dir)}}'>
+
+							<span th:text='${item.number}'>1</span>
+					</a></li>
+
+					<li th:class="${pagina.hasNextPage}? '' : 'disabled'"><span
+						th:if='${not pagina.hasNextPage}' th:class="page-link"> <span
+							class="fa fa-chevron-right"></span>
+					</span> <a th:if='${pagina.hasNextPage}' th:class="page-link"
+						th:href='@{${pagina.urlParaPagina(size, pagina.number+1, sort, dir)}}'
+						title='Go to next pagina'> <span class="fa fa-chevron-right"></span>
+					</a></li>
+
+					<li th:class="${pagina.ultima}? 'disabled' : ''"><span
+						th:if='${pagina.ultima}' th:class="page-link">Última →</span> <a
+						th:if='${not pagina.ultima}' th:class="page-link"
+						th:href='@{${pagina.urlParaPagina(size, pagina.total-1, sort, dir)}}'>Última
+							→</a></li>
+				</ul>
+			</div>
+		</div>
+	</div>
+
+</body>
+</html>
