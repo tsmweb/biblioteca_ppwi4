@@ -22,30 +22,28 @@
 				</ul>
 			</div>
 			
-			<div class="container">
-				<div class="tile">
-					<div class="tile-body">
-					
-						<form class="form-inline" method="GET" th:object="${editoraFiltro}">
-							<div class="col-xs-12 col-sm-12">
-								<div class="form-group">
-									<label class="control-label col-sm-1">Nome:</label>
-									<input type="text" 
-										id="nome" 
-										name="nome" 
-										class="form-control col-sm-9"
-										placeholder="Digite um nome para pesquisa"
-										th:field="*{nome}" />
-										
-									<div class="col-sm-2">
-										<button type="submit" class="btn btn-primary">Pesquisar
-											<i class="fa fa-search-plus"></i>
-										</button>
-									</div>	
-								</div>
+			<div class="tile">
+				<div class="tile-body">
+				
+					<form class="form-inline" method="GET" th:object="${editoraFiltro}">
+						<div class="col-xs-12 col-sm-12">
+							<div class="form-group">
+								<label class="control-label col-sm-1">Nome:</label>
+								<input type="text" 
+									id="nome" 
+									name="nome" 
+									class="form-control col-sm-9"
+									placeholder="Digite um nome para pesquisa"
+									th:field="*{nome}" />
+									
+								<div class="col-sm-2">
+									<button type="submit" class="btn btn-primary">Pesquisar
+										<i class="fa fa-search-plus"></i>
+									</button>
+								</div>	
 							</div>
-						</form>
-					</div>
+						</div>
+					</form>
 				</div>
 			</div>
 			
@@ -69,15 +67,37 @@
 			
 					<table class="table table-stripped table-bordered table-hover">
 						<thead>
-							<tr>
-								<th>ID</th>
-								<th>Nome</th>
+							<tr class="p-3 mb-2 bg-primary text-white">
+								<th style="font-weight: bold; text-align: center;">
+									<a th:href="${pagina.urlOrdenada('id')}"
+										th:remove="${pagina.vazia} ? tag">
+										<span style="color: white;">ID</span>
+										<span class="dropup" 
+											th:remove="${pagina.descendente('id')} ? tag"
+											th:if="${pagina.ordenada('id')}">
+											<span class="dropdown-toggle"></span>
+										</span>
+									</a>
+								</th>
+								
+								<th style="font-weight: bold; text-align: center;">
+									<a th:href="${pagina.urlOrdenada('name')}"
+										th:remove="${pagina.vazia} ? tag">
+										<span style="color: white;">Nome</span>
+										<span class="dropup" 
+											th:remove="${pagina.descendente('name')} ? tag"
+											th:if="${pagina.ordenada('name')}">
+											<span class="dropdown-toggle"></span>
+										</span>
+									</a>
+								</th>
+								
 								<th>Ações</th>
 							</tr>
 						</thead>
 						
 						<tbody>
-							<tr th:each="editora : ${editoras}">
+							<tr th:each="editora : ${pagina.conteudo}">
 								<td th:text="${editora.id}"></td>
 								<td th:text="${editora.name}"></td>
 								<td>
@@ -95,6 +115,8 @@
 						</tbody>
 					</table>
 					
+					<div th:replace="fragments/paginacao"></div>
+					
 					<a class="btn btn-sm btn-success" th:href="@{/editora/cadastrar}">
 						<i class="fa fa-plus-circle"></i>
 					</a>
@@ -107,15 +129,42 @@
 	</section>	
 	
 	<th:block layout:fragment="javascript-extra">
-    	$(document).ready(function(){
-    		changePageAndSize();
-    	});
-    	
-    	function changePageAndSize() {
-    		$('#pageSizeSelect').change(function(event){
-    			window.location.replace("/editora/listar?size="+this.value+"&page=0")
-    		});
-    	}
+		<script>
+		
+			/*<![CDATA[*/
+			
+				var sort = /*[[${sort}]]*/ null;
+				var dir = /*[[${dir}]]*/ null;
+				var currentPage = /*[[${pagina.atual}]]*/ 0;
+				var pageSize = /*[[${pagina.size}]]*/ 0;
+					
+			/*]]>*/
+			
+	    	$(document).ready(function(){
+	    		changePageAndSize();
+	    	});
+	    	
+	    	function changePageAndSize() {
+	    		$('#pageSizeSelect').change(function(event){	    			
+					var queryString = "/editora/listar?size="+this.value+"&page="+currentPage;
+	    			
+	    			if (!isEmpty(sort)) {
+	    				queryString += "&sort="+sort;
+	    			}
+	    			
+	    			if (!isEmpty(dir)) {
+	    				queryString += "&dir="+dir;
+	    			}
+	    			
+	    			window.location.replace(queryString);
+	    		});
+	    	}
+	    	
+	    	function isEmpty(str) {
+	    		return (!str || 0 === str.length);
+	    	}
+	    	
+	    </script>
     </th:block>	
 		
 </body>

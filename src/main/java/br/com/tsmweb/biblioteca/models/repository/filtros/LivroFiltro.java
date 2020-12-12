@@ -2,15 +2,14 @@ package br.com.tsmweb.biblioteca.models.repository.filtros;
 
 public class LivroFiltro {
 
-	private String nome;
+	private String title;
 
-	public String getNome() {
-		return nome;
+	public String getTitle() {
+		return title;
 	}
 
-	public void setNome(String nome) {
-		this.nome = nome;
-	}
-	
+	public void setTitle(String title) {
+		this.title = title;
+	}	
 	
 }

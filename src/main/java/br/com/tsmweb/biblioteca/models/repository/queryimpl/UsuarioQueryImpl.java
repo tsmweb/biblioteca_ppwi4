@@ -23,7 +23,7 @@ import br.com.tsmweb.biblioteca.models.model.Usuario;
 import br.com.tsmweb.biblioteca.models.repository.filtros.UsuarioFiltro;
 import br.com.tsmweb.biblioteca.models.repository.query.UsuarioQuery;
 
-public class UsuarioRepositoryImpl implements UsuarioQuery {
+public class UsuarioQueryImpl implements UsuarioQuery {
 
 	@PersistenceContext
 	private EntityManager entityManager;
@@ -84,12 +84,9 @@ public class UsuarioRepositoryImpl implements UsuarioQuery {
 	
 	private void sortQuery(Pageable pageable, CriteriaBuilder cb, CriteriaQuery<Usuario> cq, Root<Usuario> root) {
 		Sort sort = pageable.getSort();
-		
-		if (!sort.isSorted()) {
-			Sort.Order order = sort.iterator().next();
-			String propriedade = order.getProperty();
-			cq.orderBy(order.isAscending() ? cb.asc(root.get(propriedade)) : cb.desc(root.get(propriedade)));
-		}
+		Sort.Order order = sort.iterator().next();
+		String propriedade = order.getProperty();
+		cq.orderBy(order.isAscending() ? cb.asc(root.get(propriedade)) : cb.desc(root.get(propriedade)));
 	}
 	
 	private Long totalRegistros(Predicate predicate) {

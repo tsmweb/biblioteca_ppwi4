@@ -54,10 +54,12 @@ public class UsuarioService {
 		return usuarioRepository.findAll();
 	}
 	
+	@Transactional(readOnly = true)
 	public Optional<Usuario> findUsuarioByEmail(String email){
 		return usuarioRepository.findUsuarioByEmail(email);
 	}
 
+	@Transactional(readOnly = true)
 	public Page<Usuario> listUsuarioByPage(UsuarioFiltro usuarioFiltro, Pageable pageable) {
 		return usuarioRepository.listUsuarioByPage(usuarioFiltro, pageable);
 	}

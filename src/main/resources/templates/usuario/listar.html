@@ -14,6 +14,7 @@
 	<section layout:fragment="content">
 	
 		<div class="container">
+		
 			<div class="app-title">
 				<h1><i class="fa fa-edit">Cadastro de Usuários</i></h1>
 				<ul class="app-breadcrumb breadcrumb">
@@ -22,30 +23,28 @@
 				</ul>
 			</div>
 			
-			<div class="container">
-				<div class="tile">
-					<div class="tile-body">
-					
-						<form class="form-inline" method="GET" th:object="${usuarioFiltro}">
-							<div class="col-xs-12 col-sm-12">
-								<div class="form-group">
-									<label class="control-label col-sm-1">Nome:</label>
-									<input type="text" 
-										id="nome" 
-										name="nome" 
-										class="form-control col-sm-9"
-										placeholder="Digite um nome para pesquisa"
-										th:field="*{nome}" />
-										
-									<div class="col-sm-2">
-										<button type="submit" class="btn btn-primary">Pesquisar
-											<i class="fa fa-search-plus"></i>
-										</button>
-									</div>	
-								</div>
+			<div class="tile">
+				<div class="tile-body">
+				
+					<form class="form-inline" method="GET" th:object="${usuarioFiltro}">
+						<div class="col-xs-12 col-sm-12">
+							<div class="form-group">
+								<label class="control-label col-sm-1">Nome:</label>
+								<input type="text" 
+									id="nome" 
+									name="nome" 
+									class="form-control col-sm-9"
+									placeholder="Digite um nome para pesquisa"
+									th:field="*{nome}" />
+									
+								<div class="col-sm-2">
+									<button type="submit" class="btn btn-primary">Pesquisar
+										<i class="fa fa-search-plus"></i>
+									</button>
+								</div>	
 							</div>
-						</form>
-					</div>
+						</div>
+					</form>
 				</div>
 			</div>
 			
@@ -69,10 +68,43 @@
 			
 					<table class="table table-stripped table-bordered table-hover">
 						<thead>
-							<tr>
-								<th>ID</th>
-								<th>Nome</th>
-								<th>E-mail</th>
+							<tr class="p-3 mb-2 bg-primary text-white">
+								<th style="font-weight: bold; text-align: center;">
+									<a th:href="${pagina.urlOrdenada('id')}"
+										th:remove="${pagina.vazia} ? tag">
+										<span style="color: white;">ID</span>
+										<span class="dropup" 
+											th:remove="${pagina.descendente('id')} ? tag"
+											th:if="${pagina.ordenada('id')}">
+											<span class="dropdown-toggle"></span>
+										</span>
+									</a>
+								</th>
+								
+								<th style="font-weight: bold; text-align: center;">
+									<a th:href="${pagina.urlOrdenada('username')}"
+										th:remove="${pagina.vazia} ? tag">
+										<span style="color: white;">Nome</span>
+										<span class="dropup" 
+											th:remove="${pagina.descendente('username')} ? tag"
+											th:if="${pagina.ordenada('username')}">
+											<span class="dropdown-toggle"></span>
+										</span>
+									</a>
+								</th>
+								
+								<th style="font-weight: bold; text-align: center;">
+									<a th:href="${pagina.urlOrdenada('email')}"
+										th:remove="${pagina.vazia} ? tag">
+										<span style="color: white;">E-mail</span>
+										<span class="dropup" 
+											th:remove="${pagina.descendente('email')} ? tag"
+											th:if="${pagina.ordenada('email')}">
+											<span class="dropdown-toggle"></span>
+										</span>
+									</a>
+								</th>
+								
 								<th>Ações</th>
 							</tr>
 						</thead>
@@ -115,15 +147,40 @@
 	
 	<th:block layout:fragment="javascript-extra">
 		<script>
+		
+			/*<![CDATA[*/
+				
+				var sort = /*[[${sort}]]*/ null;
+				var dir = /*[[${dir}]]*/ null;
+				var currentPage = /*[[${pagina.atual}]]*/ 0;
+				var pageSize = /*[[${pagina.size}]]*/ 0;
+					
+			/*]]>*/
+		
 	    	$(document).ready(function(){
 	    		changePageAndSize();
 	    	});
 	    	
 	    	function changePageAndSize() {
-	    		$('#pageSizeSelect').change(function(event){
-	    			window.location.replace("/usuario/listar?size="+this.value+"&page=0")
+	    		$('#pageSizeSelect').change(function(event){	    			
+					var queryString = "/usuario/listar?size="+this.value+"&page="+currentPage;
+	    			
+	    			if (!isEmpty(sort)) {
+	    				queryString += "&sort="+sort;
+	    			}
+	    			
+	    			if (!isEmpty(dir)) {
+	    				queryString += "&dir="+dir;
+	    			}
+	    			
+	    			window.location.replace(queryString);
 	    		});
 	    	}
+	    	
+	    	function isEmpty(str) {
+	    		return (!str || 0 === str.length);
+	    	}
+	    	
     	</script>
     </th:block>	
 		

@@ -22,30 +22,28 @@
 				</ul>
 			</div>
 			
-			<div class="container">
-				<div class="tile">
-					<div class="tile-body">
-					
-						<form class="form-inline" method="GET" th:object="${departamentoFiltro}">
-							<div class="col-xs-12 col-sm-12">
-								<div class="form-group">
-									<label class="control-label col-sm-1">Nome:</label>
-									<input type="text" 
-										id="nome" 
-										name="nome" 
-										class="form-control col-sm-9"
-										placeholder="Digite um nome para pesquisa"
-										th:field="*{nome}" />
-										
-									<div class="col-sm-2">
-										<button type="submit" class="btn btn-primary">Pesquisar
-											<i class="fa fa-search-plus"></i>
-										</button>
-									</div>	
-								</div>
+			<div class="tile">
+				<div class="tile-body">
+				
+					<form class="form-inline" method="GET" th:object="${departamentoFiltro}">
+						<div class="col-xs-12 col-sm-12">
+							<div class="form-group">
+								<label class="control-label col-sm-1">Nome:</label>
+								<input type="text" 
+									id="nome" 
+									name="nome" 
+									class="form-control col-sm-9"
+									placeholder="Digite um nome para pesquisa"
+									th:field="*{nome}" />
+									
+								<div class="col-sm-2">
+									<button type="submit" class="btn btn-primary">Pesquisar
+										<i class="fa fa-search-plus"></i>
+									</button>
+								</div>	
 							</div>
-						</form>
-					</div>
+						</div>
+					</form>
 				</div>
 			</div>
 			

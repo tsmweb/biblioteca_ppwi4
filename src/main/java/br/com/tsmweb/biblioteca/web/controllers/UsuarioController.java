@@ -13,6 +13,7 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
+import org.springframework.data.domain.Sort.Direction;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
@@ -54,11 +55,14 @@ public class UsuarioController {
 	public ModelAndView listarUsuario(UsuarioFiltro usuarioFiltro, 
 			HttpServletRequest request,
 			@RequestParam(value = "size", required = false) Optional<Integer> size,
-			@RequestParam(value = "page", required = false) Optional<Integer> page) {
+			@RequestParam(value = "page", required = false) Optional<Integer> page,
+			@RequestParam(value = "sort", required = false) Optional<String> sort,
+			@RequestParam(value = "dir", required = false) Optional<String> dir) {
 		
 		Pageable pageable = PageRequest.of(page.orElse(ConfigProjeto.INITIAL_PAGE), 
 										size.orElse(ConfigProjeto.SIZE),
-										Sort.Direction.ASC, "id");
+										getDirection(dir), 
+										getAttribute(sort));
 		
 		Page<Usuario> listaUsuario = usuarioService.listUsuarioByPage(usuarioFiltro, pageable);
 		
@@ -68,11 +72,13 @@ public class UsuarioController {
 		mv.addObject("usuarioFiltro", usuarioFiltro);
 		mv.addObject("pageSizes", ConfigProjeto.PAGE_SIZES);
 		mv.addObject("size", size.orElse(ConfigProjeto.SIZE));
+		mv.addObject("dir", dir.orElse("asc"));
+		mv.addObject("sort", sort.orElse("id"));
 		mv.addObject("pagina", pagina);
 		
 		return mv;		
 	}
-	
+
 	@GetMapping(value = "/cadastrar")
 	public String cadastroUsuario(Usuario usuario) {
 		return "/usuario/cadastrar";
@@ -151,6 +157,15 @@ public class UsuarioController {
 	@ModelAttribute("departamentos")
 	public List<Departamento> listarDepartamento() {
 		return departamentoService.findAll();
+	}
+	
+	private String getAttribute(Optional<String> sort) {
+		return sort.orElse("id");
+	}
+
+	private Direction getDirection(Optional<String> dir) {
+		String direcao = dir.orElse("asc");
+		return direcao.equals("asc") ? Sort.Direction.ASC : Sort.Direction.DESC;
 	}
 	
 }

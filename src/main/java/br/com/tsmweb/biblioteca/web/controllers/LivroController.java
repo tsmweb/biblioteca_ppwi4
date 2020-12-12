@@ -2,12 +2,18 @@ package br.com.tsmweb.biblioteca.web.controllers;
 
 import java.io.ByteArrayInputStream;
 import java.util.List;
+import java.util.Optional;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.validation.Valid;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.core.io.InputStreamResource;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
+import org.springframework.data.domain.Sort.Direction;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
@@ -18,6 +24,7 @@ import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.servlet.ModelAndView;
 
 import br.com.tsmweb.biblioteca.models.config.ConfigProjeto;
@@ -25,6 +32,7 @@ import br.com.tsmweb.biblioteca.models.model.Editora;
 import br.com.tsmweb.biblioteca.models.model.Livro;
 import br.com.tsmweb.biblioteca.models.reports.LivroReportPdf;
 import br.com.tsmweb.biblioteca.models.repository.filtros.LivroFiltro;
+import br.com.tsmweb.biblioteca.models.repository.pagination.Pagina;
 import br.com.tsmweb.biblioteca.models.service.EditoraService;
 import br.com.tsmweb.biblioteca.models.service.LivroService;
 
@@ -42,12 +50,29 @@ public class LivroController {
 	private LivroReportPdf livroReportPdf;
 	
 	@GetMapping(value = "/listar")
-	public ModelAndView listarLivro(LivroFiltro livroFiltro) {
+	public ModelAndView listarLivro(LivroFiltro livroFiltro,
+			HttpServletRequest request,
+			@RequestParam(value = "size", required = false) Optional<Integer> size,
+			@RequestParam(value = "page", required = false) Optional<Integer> page,
+			@RequestParam(value = "sort", required = false) Optional<String> sort,
+			@RequestParam(value = "dir", required = false) Optional<String> dir) {
+		
+		Pageable pageable = PageRequest.of(page.orElse(ConfigProjeto.INITIAL_PAGE), 
+				size.orElse(ConfigProjeto.SIZE),
+				getDirection(dir), 
+				getAttribute(sort));
+
+		Page<Livro> listaLivro = livroService.listLivroByPage(livroFiltro, pageable);
+		
+		Pagina<Livro> pagina = new Pagina<>(listaLivro, size.orElse(ConfigProjeto.SIZE), request);
+		
 		ModelAndView mv = new ModelAndView("/livro/listar");
 		mv.addObject("livroFiltro", livroFiltro);
 		mv.addObject("pageSizes", ConfigProjeto.PAGE_SIZES);
-		mv.addObject("size", ConfigProjeto.SIZE);
-		mv.addObject("livros", livroService.findAll());
+		mv.addObject("size", size.orElse(ConfigProjeto.SIZE));
+		mv.addObject("dir", dir.orElse("asc"));
+		mv.addObject("sort", sort.orElse("id"));
+		mv.addObject("pagina", pagina);
 		
 		return mv;		
 	}
@@ -117,6 +142,15 @@ public class LivroController {
 	@ModelAttribute("editoras")
 	public List<Editora> listarEditoras() {
 		return editoraService.findAll();
+	}
+	
+	private String getAttribute(Optional<String> sort) {
+		return sort.orElse("id");
+	}
+
+	private Direction getDirection(Optional<String> dir) {
+		String direcao = dir.orElse("asc");
+		return direcao.equals("asc") ? Sort.Direction.ASC : Sort.Direction.DESC;
 	}
 	
 }
