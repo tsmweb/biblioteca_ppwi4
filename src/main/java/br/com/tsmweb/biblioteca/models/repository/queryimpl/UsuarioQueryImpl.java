@@ -7,6 +7,7 @@ import java.util.Optional;
 
 import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
+import javax.persistence.Query;
 import javax.persistence.TypedQuery;
 import javax.persistence.criteria.CriteriaBuilder;
 import javax.persistence.criteria.CriteriaQuery;
@@ -19,6 +20,8 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
 import org.thymeleaf.util.StringUtils;
 
+import br.com.tsmweb.biblioteca.models.model.Departamento;
+import br.com.tsmweb.biblioteca.models.model.Role;
 import br.com.tsmweb.biblioteca.models.model.Usuario;
 import br.com.tsmweb.biblioteca.models.repository.filtros.UsuarioFiltro;
 import br.com.tsmweb.biblioteca.models.repository.query.UsuarioQuery;
@@ -70,6 +73,55 @@ public class UsuarioQueryImpl implements UsuarioQuery {
 		lista = query.getResultList();
 		
 		return new PageImpl<Usuario>(lista, pageable, totalRegistros(predicate));
+	}
+	
+	@SuppressWarnings("unchecked")
+	@Override
+	public Usuario findUsuarioById(Long id) {
+		List<Object[]> listaUsuario = new ArrayList<>();
+		
+		Query query = entityManager.createNativeQuery("SELECT "
+				+ "u.usuario_id, "
+				+ "u.user_name AS usuario_name, "
+				+ "u.email AS usuario_email, "
+				+ "d.id AS departamento_id, "
+				+ "d.name AS departamento_name, "
+				+ "r.role_id, "
+				+ "r.name AS role_name "
+				+ "FROM usuario u "
+				+ "LEFT JOIN departamento d ON u.departamento_id = d.id "
+				+ "LEFT JOIN usuario_role ur ON u.usuario_id = ur.usuario_id "
+				+ "LEFT JOIN role r ON ur.role_id = r.role_id "
+				+ "WHERE u.usuario_id = :id").setParameter("id", id);
+		
+		listaUsuario = query.getResultList();
+		
+		Usuario usuario = new Usuario();
+		Departamento departamento = new Departamento();
+		Role role = new Role();
+		
+		for (int i = 0; i < listaUsuario.size(); i++) {
+			usuario.setId(Long.valueOf(listaUsuario.get(i)[0].toString()));
+			usuario.setUsername(listaUsuario.get(i)[1].toString());
+			usuario.setEmail(listaUsuario.get(i)[2].toString());
+			
+			if (listaUsuario.get(i)[3] != null) {
+				departamento.setId(Long.valueOf(listaUsuario.get(i)[3].toString()));
+				departamento.setName(listaUsuario.get(i)[4].toString());
+			}
+			
+			usuario.setDepartamento(departamento);
+			
+			if (listaUsuario.get(i)[5] != null) {
+				role.setId(Long.valueOf(listaUsuario.get(i)[5].toString()));
+				role.setName(listaUsuario.get(i)[6].toString());
+			}
+			
+			usuario.getRoles().add(role);
+		}
+		
+		
+		return usuario;
 	}
 
 	private Predicate predicados(CriteriaBuilder cb, Root<Usuario> root, UsuarioFiltro usuarioFiltro) {

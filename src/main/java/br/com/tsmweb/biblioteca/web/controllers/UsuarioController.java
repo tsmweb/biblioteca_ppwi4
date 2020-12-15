@@ -105,7 +105,8 @@ public class UsuarioController {
 	
 	@GetMapping(value = "/alterar/{id}")
 	public String buscarUsuarioParaAlteracao(@PathVariable Long id, Model model) {
-		Usuario usuario = usuarioService.findById(id);
+		Usuario usuario = usuarioService.findUserById(id);
+//		model.addAttribute("departamentos", usuario.getDepartamento());
 		model.addAttribute("usuario", usuario);
 		
 		return "/usuario/cadastrar";
@@ -130,7 +131,7 @@ public class UsuarioController {
 
 	@GetMapping(value = "/excluir/{id}")
 	public String excluirUsuario(@PathVariable Long id) {		
-		usuarioService.deleteById(id);
+//		usuarioService.deleteById(id);
 		
 		return "redirect:/usuario/listar";
 	}

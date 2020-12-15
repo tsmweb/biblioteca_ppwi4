@@ -82,7 +82,7 @@ public class Usuario implements Serializable {
 	@JoinColumn(name = "DEPARTAMENTO_ID", nullable = false)
 	private Departamento departamento;
 	
-	@ManyToMany(fetch = FetchType.EAGER)
+	@ManyToMany(fetch = FetchType.LAZY)
 	@JoinTable(name = "USUARIO_ROLE", 
 		joinColumns = @JoinColumn(name = "USUARIO_ID"), 
 		inverseJoinColumns = @JoinColumn(name = "ROLE_ID"))

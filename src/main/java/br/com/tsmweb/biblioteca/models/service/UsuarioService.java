@@ -64,4 +64,9 @@ public class UsuarioService {
 		return usuarioRepository.listUsuarioByPage(usuarioFiltro, pageable);
 	}
 	
+	@Transactional(readOnly = true)
+	public Usuario findUserById(Long id) {
+		return usuarioRepository.findUsuarioById(id);
+	}
+	
 }

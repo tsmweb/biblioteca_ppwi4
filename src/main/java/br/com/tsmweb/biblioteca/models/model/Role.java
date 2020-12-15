@@ -24,7 +24,7 @@ public class Role implements Serializable {
 
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
-	@Column(name = "RODE_ID")
+	@Column(name = "ROLE_ID")
 	private Long id;
 	
 	@NotEmpty(message = "O campo nome do grupo é obrigatório")

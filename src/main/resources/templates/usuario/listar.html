@@ -118,9 +118,11 @@
 									<a class="btn btn-sm btn-info" th:href="@{/usuario/alterar/{id} (id=${usuario.id})}">
 										<i class="fa fa-pencil"></i>
 									</a>
+									
 									<a class="btn btn-sm btn-danger" th:href="@{/usuario/excluir/{id} (id=${usuario.id})}">
 										<i class="fa fa-trash"></i>
-									</a> 
+									</a>
+									
 									<a class="btn btn-sm btn-primary" th:href="@{/usuario/consultar/{id} (id=${usuario.id})}">
 										<i class="fa fa-search"></i>
 									</a>
@@ -141,6 +143,33 @@
 				</div>
 			</div>
 		
+		</div>
+		
+		<div class="modal modal-danger fade" id="myModal" tabindex="-1" role="dialog">
+			<div class="modal-dialog" role="document">
+				<div class="modal-content">
+					<div class="modal-header">
+						<h4 class="modal-title text-center">Confirme a Exclusão do Registro!</h4>
+					</div>
+					<div class="modal-body">
+						<p class="text-center">Você tem certeza do que está fazendo?</p>
+					</div>
+					<div class="modal-footer">
+						<button type="button" 
+							id="btnCancel" 
+							class="btn btn-success"
+							data-dismiss="modal">
+							Não, Cancelar
+						</button>
+						
+						<button type="submit" 
+							id="confirmAction" 
+							class="btn btn-danger">
+							Sim, Excluir
+						</button>
+					</div>
+				</div>
+			</div>
 		</div>
 		
 	</section>	

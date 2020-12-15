@@ -26,7 +26,8 @@
 			
 			        <form th:action="${usuario.id == null} ? @{/usuario/incluir} : @{/usuario/alterar}" 
 			        	method="POST" 
-			        	th:object="${usuario}">
+			        	th:object="${usuario}"
+			        	id="formUsuario">
 			        	
 			        	<div class="row">
 			        		<div class="col-xs-12 col-sm-12 col-md-12">
@@ -134,15 +135,67 @@
 						</div>
 			
 			            <div class="tile-footer">
-			            	<button type="submit" class="btn btn-primary">Salvar</button>
+			            	<button type="button" 
+			            		class="btn btn-primary"
+			            		id="btnModal">
+			            		Salvar
+			            	</button>
+			            	
 			            	<a th:href="@{/usuario/listar}" class="btn btn-warning">Cancelar</a>
 			            </div>
 			        </form>
 				</div>
 			</div>
 	     </div>
-     
-    </section>
+
+		<div class="modal modal-danger fade" id="myModal" tabindex="-1" role="dialog">
+			<div class="modal-dialog" role="document">
+				<div class="modal-content">
+					<div class="modal-header">
+						<h4 class="modal-title text-center">Confirme a Alteração do Registro!</h4>
+					</div>
+					<div class="modal-body">
+						<p class="text-center">Você tem certeza do que está fazendo?</p>
+					</div>
+					<div class="modal-footer">
+						<button type="button" 
+							id="btnCancel" 
+							class="btn btn-success"
+							data-dismiss="modal">
+							Não, Cancelar
+						</button>
+						
+						<button type="submit" 
+							id="confirmAction" 
+							class="btn btn-danger">
+							Sim, Alterar
+						</button>
+					</div>
+				</div>
+			</div>
+		</div>
+
+	</section>
+	
+	<th:block layout:fragment="javascript-extra">
+		<script>
+		
+			$('#btnModal').on('click', function(event){
+				if ($('#id').val() != 0) {
+					$('#myModal').modal();
+				} else {
+					event.preventDefault();
+					$('#formUsuario').submit();
+				}
+			});
+			
+			$('#confirmAction').on('click', function(event){
+				event.preventDefault();
+				$('#formUsuario').submit();
+			})
+		
+		</script>
+	</th:block>	
     
 </body>
 </html>
