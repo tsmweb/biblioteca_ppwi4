@@ -10,14 +10,12 @@ import javax.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.core.io.InputStreamResource;
 import org.springframework.data.domain.Page;
-import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
-import org.springframework.data.domain.Sort;
-import org.springframework.data.domain.Sort.Direction;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
+import org.springframework.util.StringUtils;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.ModelAttribute;
@@ -25,9 +23,12 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.servlet.ModelAndView;
+import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import br.com.tsmweb.biblioteca.models.config.ConfigProjeto;
+import br.com.tsmweb.biblioteca.models.config.PageRequestConfig;
 import br.com.tsmweb.biblioteca.models.model.Editora;
 import br.com.tsmweb.biblioteca.models.model.Livro;
 import br.com.tsmweb.biblioteca.models.reports.LivroReportPdf;
@@ -35,6 +36,7 @@ import br.com.tsmweb.biblioteca.models.repository.filtros.LivroFiltro;
 import br.com.tsmweb.biblioteca.models.repository.pagination.Pagina;
 import br.com.tsmweb.biblioteca.models.service.EditoraService;
 import br.com.tsmweb.biblioteca.models.service.LivroService;
+import br.com.tsmweb.biblioteca.web.response.ResponseSelect2Data;
 
 @Controller
 @RequestMapping(value = "/livro")
@@ -57,10 +59,7 @@ public class LivroController {
 			@RequestParam(value = "sort", required = false) Optional<String> sort,
 			@RequestParam(value = "dir", required = false) Optional<String> dir) {
 		
-		Pageable pageable = PageRequest.of(page.orElse(ConfigProjeto.INITIAL_PAGE), 
-				size.orElse(ConfigProjeto.SIZE),
-				getDirection(dir), 
-				getAttribute(sort));
+		Pageable pageable = PageRequestConfig.requestPage(size, page, sort, dir);
 
 		Page<Livro> listaLivro = livroService.listLivroByPage(livroFiltro, pageable);
 		
@@ -83,12 +82,13 @@ public class LivroController {
 	}
 	
 	@PostMapping(value = "/incluir")
-	public String inserirLivro(@Valid Livro livro, BindingResult result) {
+	public String inserirLivro(@Valid Livro livro, BindingResult result, RedirectAttributes flash) {
 		if (result.hasErrors()) {
 			return "/livro/cadastrar";
 		}
 		
 		livroService.save(livro);
+		flash.addFlashAttribute("success", "Livro cadastrado com sucesso!");
 		
 		return "redirect:/livro/listar";
 	}
@@ -102,20 +102,22 @@ public class LivroController {
 	}
 	
 	@PostMapping(value = "/alterar")
-	public String alterarLivro(@Valid Livro livro, BindingResult result, Model model) {
+	public String alterarLivro(@Valid Livro livro, BindingResult result, Model model, RedirectAttributes flash) {
 		if (result.hasErrors()) {
 			model.addAttribute("livro", livro);
 			return "/livro/cadastrar";	
 		}
 		
 		livro = livroService.update(livro);
+		flash.addFlashAttribute("success", "Livro alterado com sucesso!");
 		
 		return "redirect:/livro/listar";
 	}
 
 	@GetMapping(value = "/excluir/{id}")
-	public String excluirLivro(@PathVariable Long id) {		
+	public String excluirLivro(@PathVariable Long id, RedirectAttributes flash) {		
 		livroService.deleteById(id);
+		flash.addFlashAttribute("success", "Livro excluído com sucesso!");
 		
 		return "redirect:/livro/listar";
 	}
@@ -139,18 +141,17 @@ public class LivroController {
 				.body(new InputStreamResource(pdf));
 	}
 	
+	@ResponseBody
+	@GetMapping(value = "/buscaEditora")
+	public List<ResponseSelect2Data> selectEditora(@RequestParam(value = "q", required = false) String query) {
+		return StringUtils.isEmpty(query) 
+				? editoraService.buscaSemParametro() 
+				: editoraService.buscaPorParametro(query);
+	}
+	
 	@ModelAttribute("editoras")
 	public List<Editora> listarEditoras() {
 		return editoraService.findAll();
-	}
-	
-	private String getAttribute(Optional<String> sort) {
-		return sort.orElse("id");
-	}
-
-	private Direction getDirection(Optional<String> dir) {
-		String direcao = dir.orElse("asc");
-		return direcao.equals("asc") ? Sort.Direction.ASC : Sort.Direction.DESC;
 	}
 	
 }

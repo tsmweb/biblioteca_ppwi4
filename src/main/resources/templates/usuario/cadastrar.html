@@ -117,16 +117,20 @@
 							<div class="col-xs-12 col-sm-12 col-md-12">
 								<div class="form-group">
 									<label class="control-label">Departamento</label> 
+									
 									<select
-										id="selectDepartamento" name="selectDepartamento"
+										id="selectDepartamento" 
+										name="departamento"
 										th:field="*{departamento}"
-										class="form-control" >
-										<option value="">Selecione um Departamento</option>
+										class="form-control dropdown-select-simple" >
+										
 										<option th:each="departamento : ${departamentos}" 
 												th:value="${departamento.id}"
 												th:text="${departamento.name}"
+												th:selected="${selected} eq ${departamento}"
 												th:classappend="${#fields.hasErrors('departamento.id')} ? 'is-invalid'"></option>
 									</select>	
+									
 									<div class="invalid-feedback">
 										<span th:errors="*{departamento}"></span>
 									</div>
@@ -179,6 +183,25 @@
 	
 	<th:block layout:fragment="javascript-extra">
 		<script>
+		
+			$("#selectDepartamento").select2({
+				ajax: {
+					url: '/usuario/buscaDepartamento',
+					dataType: 'json',
+					delay: 250,
+					data: function(params) {
+						return {
+							q: params.term
+						};
+					},
+					processResults: function(response) {
+						return {
+							results: response
+						};
+					},
+					cache: true
+				}
+			});
 		
 			$('#btnModal').on('click', function(event){
 				if ($('#id').val() != 0) {
