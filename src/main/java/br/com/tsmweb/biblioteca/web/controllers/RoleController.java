@@ -6,14 +6,17 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
+import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.servlet.ModelAndView;
+import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import br.com.tsmweb.biblioteca.models.model.Role;
 import br.com.tsmweb.biblioteca.models.service.RoleService;
+import br.com.tsmweb.biblioteca.models.service.exception.NegocioException;
 
 @Controller
 @RequestMapping(value = "/role")
@@ -79,6 +82,12 @@ public class RoleController {
 		mv.addObject("role", roleService.findById(id));
 		
 		return mv;	
+	}
+	
+	@ExceptionHandler(NegocioException.class)
+	public String handlerException(NegocioException ex, RedirectAttributes flash) {
+		flash.addFlashAttribute("error", ex.getMessage());
+		return "redirect:/role/listar";
 	}
 
 }

@@ -10,6 +10,7 @@ import org.springframework.transaction.annotation.Transactional;
 
 import br.com.tsmweb.biblioteca.models.model.Departamento;
 import br.com.tsmweb.biblioteca.models.repository.DepartamentoRepository;
+import br.com.tsmweb.biblioteca.models.service.exception.IdNaoPodeSerZeroNuloException;
 import br.com.tsmweb.biblioteca.web.response.ResponseSelect2Data;
 
 @Service
@@ -28,11 +29,19 @@ public class DepartamentoService {
 	}
 	
 	public void deleteById(Long id) {
+		if (id <= 0) {
+			throw new IdNaoPodeSerZeroNuloException("Identificador do Usuário inválido!");
+		}
+		
 		departamentoRepository.deleteById(id);
 	}
 	
 	@Transactional(readOnly = true)
 	public Departamento findById(Long id) {
+		if (id <= 0) {
+			throw new IdNaoPodeSerZeroNuloException("Identificador do Usuário inválido!");
+		}
+		
 		return departamentoRepository.getOne(id);
 	}
 	

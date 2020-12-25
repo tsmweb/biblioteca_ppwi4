@@ -3,9 +3,11 @@ package br.com.tsmweb.biblioteca.models.repository.queryimpl;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
+import java.util.Optional;
 
 import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
+import javax.persistence.Query;
 import javax.persistence.TypedQuery;
 import javax.persistence.criteria.CriteriaBuilder;
 import javax.persistence.criteria.CriteriaQuery;
@@ -18,6 +20,7 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
 import org.thymeleaf.util.StringUtils;
 
+import br.com.tsmweb.biblioteca.models.model.Editora;
 import br.com.tsmweb.biblioteca.models.model.Livro;
 import br.com.tsmweb.biblioteca.models.repository.filtros.LivroFiltro;
 import br.com.tsmweb.biblioteca.models.repository.query.LivroQuery;
@@ -88,6 +91,54 @@ public class LivroQueryImpl implements LivroQuery {
 		TypedQuery<Long> query = entityManager.createQuery(cq);
 		
 		return query.getSingleResult();
+	}
+
+	@SuppressWarnings("unchecked")
+	@Override
+	public Optional<Livro> findLivroById(Long id) {
+		List<Object[]> listaLivro = new ArrayList<>();
+		
+		Query query = entityManager.createNativeQuery(
+				"SELECT "
+				+ "l.id, "
+				+ "l.title, "
+				+ "l.author, "
+				+ "l.number_pages, "
+				+ "l.year_publication, "
+				+ "l.total_amount, "
+				+ "e.id AS publisher_id, "
+				+ "e.name AS publisher_name "
+				+ "FROM livro l "
+				+ "LEFT JOIN editora e ON l.publisher_id = e.id "
+				+ "WHERE l.id = :id").setParameter("id", id);
+		
+		listaLivro = query.getResultList();
+		
+		Optional<Livro> livro = null;
+		
+		if (!listaLivro.isEmpty()) {
+			livro = Optional.of(new Livro());
+			Editora editora = new Editora();
+			
+			for (int i = 0; i < listaLivro.size(); i++) {
+				livro.get().setId(Long.valueOf(listaLivro.get(i)[0].toString()));
+				livro.get().setTitle(listaLivro.get(i)[1].toString());
+				livro.get().setAuthor(listaLivro.get(i)[2].toString());
+				livro.get().setNumberPages(Integer.valueOf(listaLivro.get(i)[3].toString()));
+				livro.get().setYearPublication(Integer.valueOf(listaLivro.get(i)[4].toString()));
+				livro.get().setTotalAmount(Integer.valueOf(listaLivro.get(i)[5].toString()));
+				
+				if (listaLivro.get(i)[6] != null) {
+					editora.setId(Long.valueOf(listaLivro.get(i)[6].toString()));
+					editora.setName(listaLivro.get(i)[7].toString());
+				}
+				
+				livro.get().setPublisher(editora);
+			}
+		}
+		
+		
+		return livro;
 	}
 	
 }

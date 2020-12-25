@@ -6,6 +6,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
+import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -17,6 +18,7 @@ import br.com.tsmweb.biblioteca.models.config.ConfigProjeto;
 import br.com.tsmweb.biblioteca.models.model.Departamento;
 import br.com.tsmweb.biblioteca.models.repository.filtros.DepartamentoFiltro;
 import br.com.tsmweb.biblioteca.models.service.DepartamentoService;
+import br.com.tsmweb.biblioteca.models.service.exception.NegocioException;
 
 @Controller
 @RequestMapping(value="/departamento")
@@ -88,6 +90,12 @@ public class DepartamentoController {
 		mv.addObject("departamento", departamentoService.findById(id));
 		
 		return mv;
+	}
+	
+	@ExceptionHandler(NegocioException.class)
+	public String handlerException(NegocioException ex, RedirectAttributes flash) {
+		flash.addFlashAttribute("error", ex.getMessage());
+		return "redirect:/departamento/listar";
 	}
 	
 }

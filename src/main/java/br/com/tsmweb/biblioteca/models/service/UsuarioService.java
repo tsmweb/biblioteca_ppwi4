@@ -14,6 +14,8 @@ import br.com.tsmweb.biblioteca.models.repository.UsuarioRepository;
 import br.com.tsmweb.biblioteca.models.repository.filtros.UsuarioFiltro;
 import br.com.tsmweb.biblioteca.models.service.exception.ConfirmPasswordNaoInformadoException;
 import br.com.tsmweb.biblioteca.models.service.exception.EmailCadastradoException;
+import br.com.tsmweb.biblioteca.models.service.exception.IdNaoPodeSerZeroNuloException;
+import br.com.tsmweb.biblioteca.models.service.exception.EntidadeNaoCadastradaException;
 
 @Service
 @Transactional
@@ -30,7 +32,7 @@ public class UsuarioService {
 		}
 		
 		if (usuario.getConfirmPassword().equals("")) {
-			throw new ConfirmPasswordNaoInformadoException("O campo Confirme Senha deve ser preenchido");
+			throw new ConfirmPasswordNaoInformadoException("O campo Confirme Senha deve ser preenchido!");
 		}
 		
 		return usuarioRepository.save(usuario);
@@ -41,11 +43,19 @@ public class UsuarioService {
 	}
 	
 	public void deleteById(Long id) {
+		if (id <= 0) {
+			throw new IdNaoPodeSerZeroNuloException("Identificador do Usuário inválido!");
+		}
+		
 		usuarioRepository.deleteById(id);
 	}
 	
 	@Transactional(readOnly = true)
 	public Usuario findById(Long id) {
+		if (id <= 0) {
+			throw new IdNaoPodeSerZeroNuloException("Identificador do Usuário inválido!");
+		}
+		
 		return usuarioRepository.getOne(id);
 	}
 	
@@ -66,7 +76,8 @@ public class UsuarioService {
 	
 	@Transactional(readOnly = true)
 	public Usuario findUserById(Long id) {
-		return usuarioRepository.findUsuarioById(id);
+		return usuarioRepository.findUsuarioById(id)
+				.orElseThrow(() -> new EntidadeNaoCadastradaException("Usuário não cadastrado!"));
 	}
 	
 }

@@ -11,6 +11,7 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
+import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -25,6 +26,7 @@ import br.com.tsmweb.biblioteca.models.model.Editora;
 import br.com.tsmweb.biblioteca.models.repository.filtros.EditoraFiltro;
 import br.com.tsmweb.biblioteca.models.repository.pagination.Pagina;
 import br.com.tsmweb.biblioteca.models.service.EditoraService;
+import br.com.tsmweb.biblioteca.models.service.exception.NegocioException;
 
 @Controller
 @RequestMapping(value = "/editora")
@@ -110,6 +112,12 @@ public class EditoraController {
 		mv.addObject("editora", editoraService.findById(id));
 		
 		return mv;	
+	}
+	
+	@ExceptionHandler(NegocioException.class)
+	public String handlerException(NegocioException ex, RedirectAttributes flash) {
+		flash.addFlashAttribute("error", ex.getMessage());
+		return "redirect:/editora/listar";
 	}
 	
 }

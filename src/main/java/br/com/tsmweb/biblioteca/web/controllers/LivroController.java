@@ -17,6 +17,7 @@ import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.util.StringUtils;
 import org.springframework.validation.BindingResult;
+import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -36,6 +37,7 @@ import br.com.tsmweb.biblioteca.models.repository.filtros.LivroFiltro;
 import br.com.tsmweb.biblioteca.models.repository.pagination.Pagina;
 import br.com.tsmweb.biblioteca.models.service.EditoraService;
 import br.com.tsmweb.biblioteca.models.service.LivroService;
+import br.com.tsmweb.biblioteca.models.service.exception.NegocioException;
 import br.com.tsmweb.biblioteca.web.response.ResponseSelect2Data;
 
 @Controller
@@ -95,7 +97,7 @@ public class LivroController {
 	
 	@GetMapping(value = "/alterar/{id}")
 	public String buscarLivroParaAlteracao(@PathVariable Long id, Model model) {
-		Livro livro = livroService.findById(id);
+		Livro livro = livroService.findLivroById(id);
 		model.addAttribute("livro", livro);
 		
 		return "/livro/cadastrar";
@@ -125,7 +127,7 @@ public class LivroController {
 	@GetMapping(value = "/consultar/{id}")
 	public ModelAndView consultarLivro(@PathVariable Long id) {		
 		ModelAndView mv = new ModelAndView("/livro/consultar");
-		mv.addObject("livro", livroService.findById(id));
+		mv.addObject("livro", livroService.findLivroById(id));
 		
 		return mv;	
 	}
@@ -152,6 +154,12 @@ public class LivroController {
 	@ModelAttribute("editoras")
 	public List<Editora> listarEditoras() {
 		return editoraService.findAll();
+	}
+	
+	@ExceptionHandler(NegocioException.class)
+	public String handlerException(NegocioException ex, RedirectAttributes flash) {
+		flash.addFlashAttribute("error", ex.getMessage());
+		return "redirect:/livro/listar";
 	}
 	
 }

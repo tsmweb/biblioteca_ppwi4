@@ -8,6 +8,7 @@ import org.springframework.transaction.annotation.Transactional;
 
 import br.com.tsmweb.biblioteca.models.model.Role;
 import br.com.tsmweb.biblioteca.models.repository.RoleRepository;
+import br.com.tsmweb.biblioteca.models.service.exception.IdNaoPodeSerZeroNuloException;
 
 @Service
 @Transactional
@@ -25,11 +26,19 @@ public class RoleService {
 	}
 	
 	public void deleteById(Long id) {
+		if (id <= 0) {
+			throw new IdNaoPodeSerZeroNuloException("Identificador do Usuário inválido!");
+		}
+		
 		roleRepository.deleteById(id);
 	}
 	
 	@Transactional(readOnly = true)
 	public Role findById(Long id) {
+		if (id <= 0) {
+			throw new IdNaoPodeSerZeroNuloException("Identificador do Usuário inválido!");
+		}
+		
 		return roleRepository.getOne(id);
 	}
 	

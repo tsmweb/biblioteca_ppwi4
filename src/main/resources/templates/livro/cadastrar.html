@@ -27,7 +27,7 @@
 			        <form th:action="${livro.id == null} ? @{/livro/incluir} : @{/livro/alterar}" 
 			        	method="POST" 
 			        	th:object="${livro}"
-			        	id="formEditora">
+			        	id="formLivro">
 			        	
 			        	<div class="row">
 			        		<div class="col-xs-12 col-sm-12 col-md-12">
@@ -221,13 +221,13 @@
 					$('#myModal').modal();
 				} else {
 					event.preventDefault();
-					$('#formEditora').submit();
+					$('#formLivro').submit();
 				}
 			});
 			
 			$('#confirmAction').on('click', function(event){
 				event.preventDefault();
-				$('#formEditora').submit();
+				$('#formLivro').submit();
 			})
 		
 		</script>

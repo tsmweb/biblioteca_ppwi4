@@ -13,6 +13,7 @@ import org.springframework.transaction.annotation.Transactional;
 import br.com.tsmweb.biblioteca.models.model.Editora;
 import br.com.tsmweb.biblioteca.models.repository.EditoraRepository;
 import br.com.tsmweb.biblioteca.models.repository.filtros.EditoraFiltro;
+import br.com.tsmweb.biblioteca.models.service.exception.IdNaoPodeSerZeroNuloException;
 import br.com.tsmweb.biblioteca.web.response.ResponseSelect2Data;
 
 @Service
@@ -31,11 +32,19 @@ public class EditoraService {
 	}
 	
 	public void deleteById(Long id) {
+		if (id <= 0) {
+			throw new IdNaoPodeSerZeroNuloException("Identificador do Usuário inválido!");
+		}
+		
 		editoraRepository.deleteById(id);
 	}
 	
 	@Transactional(readOnly = true)
 	public Editora findById(Long id) {
+		if (id <= 0) {
+			throw new IdNaoPodeSerZeroNuloException("Identificador do Usuário inválido!");
+		}
+		
 		return editoraRepository.getOne(id);
 	}
 	

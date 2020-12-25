@@ -26,7 +26,8 @@
 			
 			        <form th:action="${editora.id == null} ? @{/editora/incluir} : @{/editora/alterar}" 
 			        	method="POST" 
-			        	th:object="${editora}">
+			        	th:object="${editora}"
+			        	id="formEditora">
 			        	
 			        	<div class="row">
 			        		<div class="col-xs-12 col-sm-12 col-md-12">
@@ -58,16 +59,68 @@
 				            </div>
 						</div>
 
-			            <div class="tile-footer">
-			            	<button type="submit" class="btn btn-primary">Salvar</button>
+			            <div class="tile-footer">			            	
+			            	<button type="button" 
+			            		class="btn btn-primary"
+			            		id="btnModal">
+			            		Salvar
+			            	</button>
+			            	
 			            	<a th:href="@{/editora/listar}" class="btn btn-warning">Cancelar</a>
 			            </div>
 			        </form>
 				</div>
 			</div>
 	     </div>
+	     
+	     <div class="modal modal-danger fade" id="myModal" tabindex="-1" role="dialog">
+			<div class="modal-dialog" role="document">
+				<div class="modal-content">
+					<div class="modal-header">
+						<h4 class="modal-title text-center">Confirme a Alteração do Registro!</h4>
+					</div>
+					<div class="modal-body">
+						<p class="text-center">Você tem certeza do que está fazendo?</p>
+					</div>
+					<div class="modal-footer">
+						<button type="button" 
+							id="btnCancel" 
+							class="btn btn-success"
+							data-dismiss="modal">
+							Não, Cancelar
+						</button>
+						
+						<button type="submit" 
+							id="confirmAction" 
+							class="btn btn-danger">
+							Sim, Alterar
+						</button>
+					</div>
+				</div>
+			</div>
+		</div>
      
     </section>
+    
+    <th:block layout:fragment="javascript-extra">
+		<script>
+		
+			$('#btnModal').on('click', function(event){
+				if ($('#id').val() != 0) {
+					$('#myModal').modal();
+				} else {
+					event.preventDefault();
+					$('#formEditora').submit();
+				}
+			});
+			
+			$('#confirmAction').on('click', function(event){
+				event.preventDefault();
+				$('#formEditora').submit();
+			})
+		
+		</script>
+	</th:block>	
     
 </body>
 </html>

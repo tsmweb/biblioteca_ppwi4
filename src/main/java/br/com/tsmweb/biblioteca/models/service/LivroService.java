@@ -11,6 +11,8 @@ import org.springframework.transaction.annotation.Transactional;
 import br.com.tsmweb.biblioteca.models.model.Livro;
 import br.com.tsmweb.biblioteca.models.repository.LivroRepository;
 import br.com.tsmweb.biblioteca.models.repository.filtros.LivroFiltro;
+import br.com.tsmweb.biblioteca.models.service.exception.EntidadeNaoCadastradaException;
+import br.com.tsmweb.biblioteca.models.service.exception.IdNaoPodeSerZeroNuloException;
 
 @Service
 @Transactional
@@ -28,11 +30,19 @@ public class LivroService {
 	}
 	
 	public void deleteById(Long id) {
+		if (id <= 0) {
+			throw new IdNaoPodeSerZeroNuloException("Identificador do Usuário inválido!");
+		}
+		
 		livroRepository.deleteById(id);
 	}
 	
 	@Transactional(readOnly = true)
 	public Livro findById(Long id) {
+		if (id <= 0) {
+			throw new IdNaoPodeSerZeroNuloException("Identificador do Usuário inválido!");
+		}
+		
 		return livroRepository.getOne(id);
 	}
 	
@@ -44,6 +54,12 @@ public class LivroService {
 	@Transactional(readOnly = true)
 	public Page<Livro> listLivroByPage(LivroFiltro livroFiltro, Pageable pageable) {
 		return livroRepository.listLivroByPage(livroFiltro, pageable);
+	}
+	
+	@Transactional(readOnly = true)
+	public Livro findLivroById(Long id) {
+		return livroRepository.findLivroById(id)
+				.orElseThrow(() -> new EntidadeNaoCadastradaException("Livro não cadastrado!"));
 	}
 	
 }

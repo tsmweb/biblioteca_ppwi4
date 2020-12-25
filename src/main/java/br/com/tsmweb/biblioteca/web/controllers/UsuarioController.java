@@ -17,6 +17,7 @@ import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.util.StringUtils;
 import org.springframework.validation.BindingResult;
+import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -30,14 +31,17 @@ import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 import br.com.tsmweb.biblioteca.models.config.ConfigProjeto;
 import br.com.tsmweb.biblioteca.models.config.PageRequestConfig;
 import br.com.tsmweb.biblioteca.models.model.Departamento;
+import br.com.tsmweb.biblioteca.models.model.Role;
 import br.com.tsmweb.biblioteca.models.model.Usuario;
 import br.com.tsmweb.biblioteca.models.reports.UsuarioReportPdf;
 import br.com.tsmweb.biblioteca.models.repository.filtros.UsuarioFiltro;
 import br.com.tsmweb.biblioteca.models.repository.pagination.Pagina;
 import br.com.tsmweb.biblioteca.models.service.DepartamentoService;
+import br.com.tsmweb.biblioteca.models.service.RoleService;
 import br.com.tsmweb.biblioteca.models.service.UsuarioService;
 import br.com.tsmweb.biblioteca.models.service.exception.ConfirmPasswordNaoInformadoException;
 import br.com.tsmweb.biblioteca.models.service.exception.EmailCadastradoException;
+import br.com.tsmweb.biblioteca.models.service.exception.NegocioException;
 import br.com.tsmweb.biblioteca.web.response.ResponseSelect2Data;
 
 @Controller
@@ -49,6 +53,9 @@ public class UsuarioController {
 	
 	@Autowired
 	private DepartamentoService departamentoService;
+	
+	@Autowired
+	private RoleService roleService;
 	
 	@Autowired
 	private UsuarioReportPdf usuarioReportPdf;
@@ -104,7 +111,7 @@ public class UsuarioController {
 	}
 	
 	@GetMapping(value = "/alterar/{id}")
-	public String buscarUsuarioParaAlteracao(@PathVariable Long id, Model model) {
+	public String buscarUsuarioParaAlteracao(@PathVariable Long id, Model model, RedirectAttributes flash) {
 		Usuario usuario = usuarioService.findUserById(id);
 //		model.addAttribute("departamentos", usuario.getDepartamento());
 		model.addAttribute("usuario", usuario);
@@ -122,6 +129,9 @@ public class UsuarioController {
 		try {
 			usuario = usuarioService.update(usuario);
 			flash.addFlashAttribute("success", "Usuário alterado com sucesso!");
+		} catch(EmailCadastradoException e) {
+			result.rejectValue("email", e.getMessage(), e.getMessage());
+			return "/usuario/cadastrar";
 		} catch(ConfirmPasswordNaoInformadoException e) {
 			result.rejectValue("confirmPassword", e.getMessage(), e.getMessage());
 			return "/usuario/cadastrar";
@@ -131,7 +141,7 @@ public class UsuarioController {
 	}
 
 	@GetMapping(value = "/excluir/{id}")
-	public String excluirUsuario(@PathVariable Long id, RedirectAttributes flash) {		
+	public String excluirUsuario(@PathVariable Long id, RedirectAttributes flash) {	
 		usuarioService.deleteById(id);
 		flash.addFlashAttribute("success", "Usuário excluído com sucesso!");
 		
@@ -141,7 +151,7 @@ public class UsuarioController {
 	@GetMapping(value = "/consultar/{id}")
 	public ModelAndView consultarUsuario(@PathVariable Long id) {		
 		ModelAndView mv = new ModelAndView("/usuario/consultar");
-		mv.addObject("usuario", usuarioService.findById(id));
+		mv.addObject("usuario", usuarioService.findUserById(id));
 		
 		return mv;	
 	}
@@ -168,6 +178,17 @@ public class UsuarioController {
 	@ModelAttribute("departamentos")
 	public List<Departamento> listarDepartamento() {
 		return departamentoService.findAll();
+	}
+	
+	@ExceptionHandler(NegocioException.class)
+	public String handlerException(NegocioException ex, RedirectAttributes flash) {
+		flash.addFlashAttribute("error", ex.getMessage());
+		return "redirect:/usuario/listar";
+	}
+	
+	@ModelAttribute("roles")
+	public List<Role> listaRoles() {
+		return roleService.findAll();
 	}
 	
 }

@@ -77,7 +77,7 @@ public class UsuarioQueryImpl implements UsuarioQuery {
 	
 	@SuppressWarnings("unchecked")
 	@Override
-	public Usuario findUsuarioById(Long id) {
+	public Optional<Usuario> findUsuarioById(Long id) {
 		List<Object[]> listaUsuario = new ArrayList<>();
 		
 		Query query = entityManager.createNativeQuery("SELECT "
@@ -96,28 +96,32 @@ public class UsuarioQueryImpl implements UsuarioQuery {
 		
 		listaUsuario = query.getResultList();
 		
-		Usuario usuario = new Usuario();
-		Departamento departamento = new Departamento();
-		Role role = new Role();
+		Optional<Usuario> usuario = null;
 		
-		for (int i = 0; i < listaUsuario.size(); i++) {
-			usuario.setId(Long.valueOf(listaUsuario.get(i)[0].toString()));
-			usuario.setUsername(listaUsuario.get(i)[1].toString());
-			usuario.setEmail(listaUsuario.get(i)[2].toString());
+		if (!listaUsuario.isEmpty()) {
+			usuario = Optional.of(new Usuario());
+			Departamento departamento = new Departamento();
+			Role role = new Role();
 			
-			if (listaUsuario.get(i)[3] != null) {
-				departamento.setId(Long.valueOf(listaUsuario.get(i)[3].toString()));
-				departamento.setName(listaUsuario.get(i)[4].toString());
+			for (int i = 0; i < listaUsuario.size(); i++) {
+				usuario.get().setId(Long.valueOf(listaUsuario.get(i)[0].toString()));
+				usuario.get().setUsername(listaUsuario.get(i)[1].toString());
+				usuario.get().setEmail(listaUsuario.get(i)[2].toString());
+				
+				if (listaUsuario.get(i)[3] != null) {
+					departamento.setId(Long.valueOf(listaUsuario.get(i)[3].toString()));
+					departamento.setName(listaUsuario.get(i)[4].toString());
+				}
+				
+				usuario.get().setDepartamento(departamento);
+				
+				if (listaUsuario.get(i)[5] != null) {
+					role.setId(Long.valueOf(listaUsuario.get(i)[5].toString()));
+					role.setName(listaUsuario.get(i)[6].toString());
+				}
+				
+				usuario.get().getRoles().add(role);
 			}
-			
-			usuario.setDepartamento(departamento);
-			
-			if (listaUsuario.get(i)[5] != null) {
-				role.setId(Long.valueOf(listaUsuario.get(i)[5].toString()));
-				role.setName(listaUsuario.get(i)[6].toString());
-			}
-			
-			usuario.getRoles().add(role);
 		}
 		
 		
