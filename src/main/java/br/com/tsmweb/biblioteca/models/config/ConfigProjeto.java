@@ -6,4 +6,6 @@ public class ConfigProjeto {
 	public static final int SIZE = 5;
 	public static final int INITIAL_PAGE = 0;
 	
+	public static final String DIR_REPORTS = "/reports/";
+	
 }

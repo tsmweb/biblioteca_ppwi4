@@ -188,12 +188,15 @@
 					
 					<div th:replace="fragments/paginacao"></div>
 					
-					<a class="btn btn-sm btn-success" th:href="@{/livro/cadastrar}">
-						<i class="fa fa-plus-circle"></i> Novo Livro
+					<a class="btn btn-sm btn-success" 
+						th:href="@{/livro/cadastrar}">
+						<i class="fa fa-plus-circle"></i>
 					</a>
 					
-					<a class="btn btn-sm btn-success" th:href="@{/livro/relatorio}">
-						Relatório
+					<a class="btn btn-sm btn-primary" 
+						th:href="@{/livro/relatorio}"
+						target="_blank">
+						<i class="fa fa-file-pdf-o"></i>
 					</a>
 		
 				</div>

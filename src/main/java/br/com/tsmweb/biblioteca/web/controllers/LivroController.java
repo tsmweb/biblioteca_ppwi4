@@ -32,12 +32,12 @@ import br.com.tsmweb.biblioteca.models.config.ConfigProjeto;
 import br.com.tsmweb.biblioteca.models.config.PageRequestConfig;
 import br.com.tsmweb.biblioteca.models.model.Editora;
 import br.com.tsmweb.biblioteca.models.model.Livro;
-import br.com.tsmweb.biblioteca.models.reports.LivroReportPdf;
 import br.com.tsmweb.biblioteca.models.repository.filtros.LivroFiltro;
 import br.com.tsmweb.biblioteca.models.repository.pagination.Pagina;
 import br.com.tsmweb.biblioteca.models.service.EditoraService;
 import br.com.tsmweb.biblioteca.models.service.LivroService;
 import br.com.tsmweb.biblioteca.models.service.exception.NegocioException;
+import br.com.tsmweb.biblioteca.models.service.reports.LivroReportPdf;
 import br.com.tsmweb.biblioteca.web.response.ResponseSelect2Data;
 
 @Controller

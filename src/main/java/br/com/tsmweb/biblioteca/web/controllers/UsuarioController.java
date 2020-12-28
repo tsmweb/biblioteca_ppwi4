@@ -1,16 +1,23 @@
 package br.com.tsmweb.biblioteca.web.controllers;
 
 import java.io.ByteArrayInputStream;
+import java.io.IOException;
+import java.io.OutputStream;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Locale;
+import java.util.Map;
 import java.util.Optional;
 
 import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
 import javax.validation.Valid;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.core.io.InputStreamResource;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
+import org.springframework.http.HttpHeaders;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
@@ -33,16 +40,22 @@ import br.com.tsmweb.biblioteca.models.config.PageRequestConfig;
 import br.com.tsmweb.biblioteca.models.model.Departamento;
 import br.com.tsmweb.biblioteca.models.model.Role;
 import br.com.tsmweb.biblioteca.models.model.Usuario;
-import br.com.tsmweb.biblioteca.models.reports.UsuarioReportPdf;
 import br.com.tsmweb.biblioteca.models.repository.filtros.UsuarioFiltro;
 import br.com.tsmweb.biblioteca.models.repository.pagination.Pagina;
 import br.com.tsmweb.biblioteca.models.service.DepartamentoService;
 import br.com.tsmweb.biblioteca.models.service.RoleService;
 import br.com.tsmweb.biblioteca.models.service.UsuarioService;
+import br.com.tsmweb.biblioteca.models.service.components.PrintJasperReport;
 import br.com.tsmweb.biblioteca.models.service.exception.ConfirmPasswordNaoInformadoException;
 import br.com.tsmweb.biblioteca.models.service.exception.EmailCadastradoException;
 import br.com.tsmweb.biblioteca.models.service.exception.NegocioException;
+import br.com.tsmweb.biblioteca.models.service.reports.JasperReportsService;
+import br.com.tsmweb.biblioteca.models.service.reports.UsuarioReportPdf;
 import br.com.tsmweb.biblioteca.web.response.ResponseSelect2Data;
+import net.sf.jasperreports.engine.JRException;
+import net.sf.jasperreports.engine.JRParameter;
+import net.sf.jasperreports.engine.JasperExportManager;
+import net.sf.jasperreports.engine.JasperPrint;
 
 @Controller
 @RequestMapping(value = "/usuario")
@@ -59,6 +72,14 @@ public class UsuarioController {
 	
 	@Autowired
 	private UsuarioReportPdf usuarioReportPdf;
+	
+	@Autowired
+	private JasperReportsService jasperReportsService;
+	
+	@Autowired
+	private PrintJasperReport printJasperReport;
+	
+	private Map<String, Object> params = new HashMap<>();
 
 	@GetMapping(value = "/listar")
 	public ModelAndView listarUsuario(UsuarioFiltro usuarioFiltro, 
@@ -189,6 +210,62 @@ public class UsuarioController {
 	@ModelAttribute("roles")
 	public List<Role> listaRoles() {
 		return roleService.findAll();
+	}
+	
+	@GetMapping(value = "/pdflista")
+	public ResponseEntity<byte[]> imprimeRelatorioPdfFromLista() {
+		List<Usuario> listaUsuario = usuarioService.findAll();
+		
+		params.put(JRParameter.REPORT_LOCALE, new Locale("pt", "BR"));
+		
+		printJasperReport.setFile("rel_usuarios");
+		printJasperReport.setParams(params);
+		printJasperReport.setCollection(listaUsuario);
+		
+		byte[] relatorio = jasperReportsService.generateListReport(printJasperReport);
+		
+		return ResponseEntity.ok()
+					.header(HttpHeaders.CONTENT_TYPE, MediaType.APPLICATION_PDF_VALUE)
+					.body(relatorio);
+	}
+	
+	@GetMapping(value = "/pdfsql")
+	public ResponseEntity<byte[]> imprimeRelatorioPdfFromSql() {
+		params.put(JRParameter.REPORT_LOCALE, new Locale("pt", "BR"));
+		params.put("CODIGO_INICIAL", 1L);
+		params.put("CODIGO_FINAL", 100L);
+		
+		printJasperReport.setFile("rel_consulta_usuario");
+		printJasperReport.setParams(params);
+		
+		byte[] relatorio = jasperReportsService.generateNativeSqlReport(printJasperReport);
+		
+		return ResponseEntity.ok()
+					.header(HttpHeaders.CONTENT_TYPE, MediaType.APPLICATION_PDF_VALUE)
+					.body(relatorio);
+	}
+	
+	@GetMapping(value = "/pdfdownload")
+	public void downloadRelatorioPdf(HttpServletResponse response) {
+		params.put(JRParameter.REPORT_LOCALE, new Locale("pt", "BR"));
+		params.put("CODIGO_INICIAL", 1L);
+		params.put("CODIGO_FINAL", 100L);
+		
+		printJasperReport.setFile("rel_consulta_usuario");
+		printJasperReport.setParams(params);
+		
+		response.setContentType("application/x-download");
+		response.setHeader("Content-Disposition", String.format("attachment; filename=\"usuario.pdf\""));
+		
+		try {
+			JasperPrint jasperPrint = jasperReportsService.downloadReportPdf(printJasperReport);
+			OutputStream out = response.getOutputStream();
+			JasperExportManager.exportReportToPdfStream(jasperPrint, out);
+		} catch(IOException e) {
+			e.printStackTrace();
+		} catch(JRException e) {
+			e.printStackTrace();
+		}
 	}
 	
 }

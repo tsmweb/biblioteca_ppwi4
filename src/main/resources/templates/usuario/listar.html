@@ -138,11 +138,30 @@
 					<div th:replace="fragments/paginacao"></div>
 					
 					<a class="btn btn-sm btn-success" th:href="@{/usuario/cadastrar}">
-						<i class="fa fa-plus-circle"></i> Novo Usuário
+						<i class="fa fa-plus-circle"></i>
 					</a>
 		
-					<a class="btn btn-sm btn-success" th:href="@{/usuario/relatorio}">
-						Relatório
+					<a class="btn btn-sm btn-primary" 
+						th:href="@{/usuario/relatorio}"
+						target="_blank">
+						<i class="fa fa-file-pdf-o"></i>
+					</a>
+					
+					<a class="btn btn-sm btn-primary" 
+						th:href="@{/usuario/pdflista}"
+						target="_blank">
+						<i class="fa fa-file-pdf-o"></i>
+					</a>
+					
+					<a class="btn btn-sm btn-primary" 
+						th:href="@{/usuario/pdfsql}"
+						target="_blank">
+						<i class="fa fa-file-pdf-o"></i>
+					</a>
+					
+					<a class="btn btn-sm btn-primary" 
+						th:href="@{/usuario/pdfdownload}">
+						<i class="fa fa-file-pdf-o"></i>
 					</a>
 				</div>
 			</div>
