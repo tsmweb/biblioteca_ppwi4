@@ -23,117 +23,119 @@
 				</ul>
 			</div>
 			
-			<div class="tile">
-				<div class="tile-body">
-				
-					<form class="form-inline" method="GET" th:object="${usuarioFiltro}">
-						<div class="col-xs-12 col-sm-12">
-							<div class="form-group">
-								<label class="control-label col-sm-1">Nome:</label>
-								<input type="text" 
-									id="nome" 
-									name="nome" 
-									class="form-control col-sm-9"
-									placeholder="Digite um nome para pesquisa"
-									th:field="*{nome}" />
-									
-								<div class="col-sm-2">
-									<button type="submit" class="btn btn-primary">Pesquisar
-										<i class="fa fa-search-plus"></i>
-									</button>
-								</div>	
-							</div>
-						</div>
-					</form>
-				</div>
-			</div>
-			
 			<div class="col-xs-12 col-sm-12 col-md-12">
 				<div th:replace="fragments/alert"></div>
 			</div>
 			
 			<div class="tile">
 				<div class="tile-body">
-				
-					<div class="form-group row col-md-10">
-						<label for="pageSizeSelect" class="col-form-label">
-							<b>Mostrar:</b>
-						</label>
-						
-						<div>
-							<select class="form-control pagination" id="pageSizeSelect">
-								<option th:each="pageSize : ${pageSizes}" 
-									th:text="${pageSize}"
-									th:value="${pageSize}"
-									th:selected="${pageSize} == ${size}"></option>
-							</select>
+					<div class="row">
+						<div class="col-md-6">
+							<div class="form-group row">
+								<label for="pageSizeSelect" class="col-form-label col-12 col-sm-2">Mostrar:</label>
+								
+								<div class="col-8 col-sm-6 col-md-6 offset-md-1">
+									<select class="form-control pagination" id="pageSizeSelect">
+										<option th:each="pageSize : ${pageSizes}" 
+											th:text="${pageSize}"
+											th:value="${pageSize}"
+											th:selected="${pageSize} == ${size}"></option>
+									</select>
+								</div>
+							</div>
 						</div>
-					</div>
-			
-					<table class="table table-stripped table-bordered table-hover">
-						<thead>
-							<tr class="p-3 mb-2 bg-primary text-white">
-								<th style="font-weight: bold; text-align: center;">
-									<a th:href="${pagina.urlOrdenada('id')}"
-										th:remove="${pagina.vazia} ? tag">
-										<span style="color: white;">ID</span>
-										<span class="dropup" 
-											th:remove="${pagina.descendente('id')} ? tag"
-											th:if="${pagina.ordenada('id')}">
-											<span class="dropdown-toggle"></span>
-										</span>
-									</a>
-								</th>
-								
-								<th style="font-weight: bold; text-align: center;">
-									<a th:href="${pagina.urlOrdenada('username')}"
-										th:remove="${pagina.vazia} ? tag">
-										<span style="color: white;">Nome</span>
-										<span class="dropup" 
-											th:remove="${pagina.descendente('username')} ? tag"
-											th:if="${pagina.ordenada('username')}">
-											<span class="dropdown-toggle"></span>
-										</span>
-									</a>
-								</th>
-								
-								<th style="font-weight: bold; text-align: center;">
-									<a th:href="${pagina.urlOrdenada('email')}"
-										th:remove="${pagina.vazia} ? tag">
-										<span style="color: white;">E-mail</span>
-										<span class="dropup" 
-											th:remove="${pagina.descendente('email')} ? tag"
-											th:if="${pagina.ordenada('email')}">
-											<span class="dropdown-toggle"></span>
-										</span>
-									</a>
-								</th>
-								
-								<th>Ações</th>
-							</tr>
-						</thead>
 						
-						<tbody>
-							<tr th:each="usuario : ${pagina.conteudo}">
-								<td th:text="${usuario.id}"></td>
-								<td th:text="${usuario.username}"></td>
-								<td th:text="${usuario.email}"></td>
-								<td>
-									<a class="btn btn-sm btn-info" th:href="@{/usuario/alterar/{id} (id=${usuario.id})}">
-										<i class="fa fa-pencil"></i>
-									</a>
+						<div class="col-md-6">
+							<form method="GET" th:object="${usuarioFiltro}">
+								<div class="form-group offset-md-1">
+									<div class="row">
+										<label class="col-form-label col-12 col-sm-2 col-md-1">Nome:</label>
+										<div class="col-8 col-sm-8 col-md-8 offset-md-1">
+											<input type="text" 
+												id="nome" 
+												name="nome" 
+												class="form-control"
+												placeholder="Digite um nome para pesquisa"
+												th:field="*{nome}" />
+										</div>
+											
+										<div class="col-2 col-sm-2 col-md-2">
+											<button type="submit" class="btn btn-primary">
+												<i class="fa fa-search-plus"></i>
+											</button>
+										</div>	
+									</div>
+								</div>
+							</form>
+						</div>
+					</div>	
+				
+					<div id="no-more-tables">
+						<table id="tabela" class="table table-stripped table-bordered table-hover cf">
+							<thead class="cf">
+								<tr class="p-3 mb-2 bg-primary text-white">
+									<th style="font-weight: bold; text-align: center;">
+										<a th:href="${pagina.urlOrdenada('id')}"
+											th:remove="${pagina.vazia} ? tag">
+											<span style="color: white;">ID</span>
+											<span class="dropup" 
+												th:remove="${pagina.descendente('id')} ? tag"
+												th:if="${pagina.ordenada('id')}">
+												<span class="dropdown-toggle"></span>
+											</span>
+										</a>
+									</th>
 									
-									<a class="btn btn-sm btn-danger" th:href="@{/usuario/excluir/{id} (id=${usuario.id})}">
-										<i class="fa fa-trash"></i>
-									</a>
+									<th style="font-weight: bold; text-align: center;">
+										<a th:href="${pagina.urlOrdenada('username')}"
+											th:remove="${pagina.vazia} ? tag">
+											<span style="color: white;">Nome</span>
+											<span class="dropup" 
+												th:remove="${pagina.descendente('username')} ? tag"
+												th:if="${pagina.ordenada('username')}">
+												<span class="dropdown-toggle"></span>
+											</span>
+										</a>
+									</th>
 									
-									<a class="btn btn-sm btn-primary" th:href="@{/usuario/consultar/{id} (id=${usuario.id})}">
-										<i class="fa fa-search"></i>
-									</a>
-								</td>
-							</tr>
-						</tbody>
-					</table>
+									<th style="font-weight: bold; text-align: center;">
+										<a th:href="${pagina.urlOrdenada('email')}"
+											th:remove="${pagina.vazia} ? tag">
+											<span style="color: white;">E-mail</span>
+											<span class="dropup" 
+												th:remove="${pagina.descendente('email')} ? tag"
+												th:if="${pagina.ordenada('email')}">
+												<span class="dropdown-toggle"></span>
+											</span>
+										</a>
+									</th>
+									
+									<th>Ações</th>
+								</tr>
+							</thead>
+							
+							<tbody>
+								<tr th:each="usuario : ${pagina.conteudo}">
+									<td data-title="ID" th:text="${usuario.id}"></td>
+									<td data-title="Nome" th:text="${usuario.username}"></td>
+									<td data-title="E-mail" th:text="${usuario.email}"></td>
+									<td data-title="Ação">
+										<a class="btn btn-sm btn-info" th:href="@{/usuario/alterar/{id} (id=${usuario.id})}">
+											<i class="fa fa-pencil"></i>
+										</a>
+										
+										<a class="btn btn-sm btn-danger" th:href="@{/usuario/excluir/{id} (id=${usuario.id})}">
+											<i class="fa fa-trash"></i>
+										</a>
+										
+										<a class="btn btn-sm btn-primary" th:href="@{/usuario/consultar/{id} (id=${usuario.id})}">
+											<i class="fa fa-search"></i>
+										</a>
+									</td>
+								</tr>
+							</tbody>
+						</table>
+					</div>
 					
 					<div th:replace="fragments/paginacao"></div>
 					

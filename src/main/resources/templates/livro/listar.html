@@ -22,169 +22,172 @@
 				</ul>
 			</div>
 			
-			<div class="tile">
-				<div class="tile-body">
-				
-					<form class="form-inline" method="GET" th:object="${livroFiltro}">
-						<div class="col-xs-12 col-sm-12">
-							<div class="form-group">
-								<label class="control-label col-sm-1">Título:</label>
-								<input type="text" 
-									id="title" 
-									name="title" 
-									class="form-control col-sm-9"
-									placeholder="Digite um título para pesquisa"
-									th:field="*{title}" />
-									
-								<div class="col-sm-2">
-									<button type="submit" class="btn btn-primary">Pesquisar
-										<i class="fa fa-search-plus"></i>
-									</button>
-								</div>	
-							</div>
-						</div>
-					</form>
-				</div>
-			</div>
-			
 			<div class="col-xs-12 col-sm-12 col-md-12">
 				<div th:replace="fragments/alert"></div>
 			</div>
 			
 			<div class="tile">
 				<div class="tile-body">
+					<div class="row">
+						<div class="col-md-6">
+							<div class="form-group row">
+								<label for="pageSizeSelect" class="col-form-label col-12 col-sm-2">
+									<b>Mostrar:</b>
+								</label>
+								
+								<div class="col-8 col-sm-6 col-md-6 offset-md-1">
+									<select class="form-control pagination" id="pageSizeSelect">
+										<option th:each="pageSize : ${pageSizes}" 
+											th:text="${pageSize}"
+											th:value="${pageSize}"
+											th:selected="${pageSize} == ${size}"></option>
+									</select>
+								</div>
+							</div>
+						</div>
 				
-					<div class="form-group row col-md-10">
-						<label for="pageSizeSelect" class="col-form-label">
-							<b>Mostrar:</b>
-						</label>
-						
-						<div>
-							<select class="form-control pagination" id="pageSizeSelect">
-								<option th:each="pageSize : ${pageSizes}" 
-									th:text="${pageSize}"
-									th:value="${pageSize}"
-									th:selected="${pageSize} == ${size}"></option>
-							</select>
+						<div class="col-md-6">
+							<form method="GET" th:object="${livroFiltro}">
+								<div class="form-group offset-md-1">
+									<div class="row">
+										<label class="col-form-label col-12 col-sm-2 col-md-1">Título:</label>
+										<div class="col-8 col-sm-8 col-md-8 offset-md-1">
+											<input type="text" 
+												id="title" 
+												name="title" 
+												class="form-control"
+												placeholder="Digite um título para pesquisa"
+												th:field="*{title}" />
+										</div>
+										<div class="col-2 col-sm-2 col-md-2">
+											<button type="submit" class="btn btn-primary">
+												<i class="fa fa-search-plus"></i>
+											</button>
+										</div>	
+									</div>
+								</div>
+							</form>
 						</div>
 					</div>
-			
-					<table class="table table-stripped table-bordered table-hover">
-						<thead>
-							<tr class="p-3 mb-2 bg-primary text-white">
-								
-								<th style="font-weight: bold; text-align: center;">
-									<a th:href="${pagina.urlOrdenada('id')}"
-										th:remove="${pagina.vazia} ? tag">
-										<span style="color: white;">ID</span>
-										<span class="dropup" 
-											th:remove="${pagina.descendente('id')} ? tag"
-											th:if="${pagina.ordenada('id')}">
-											<span class="dropdown-toggle"></span>
-										</span>
-									</a>
-								</th>
-								
-								<th style="font-weight: bold; text-align: center;">
-									<a th:href="${pagina.urlOrdenada('title')}"
-										th:remove="${pagina.vazia} ? tag">
-										<span style="color: white;">Título</span>
-										<span class="dropup" 
-											th:remove="${pagina.descendente('title')} ? tag"
-											th:if="${pagina.ordenada('title')}">
-											<span class="dropdown-toggle"></span>
-										</span>
-									</a>
-								</th>
-								
-								<th style="font-weight: bold; text-align: center;">
-									<a th:href="${pagina.urlOrdenada('author')}"
-										th:remove="${pagina.vazia} ? tag">
-										<span style="color: white;">Autor</span>
-										<span class="dropup" 
-											th:remove="${pagina.descendente('author')} ? tag"
-											th:if="${pagina.ordenada('author')}">
-											<span class="dropdown-toggle"></span>
-										</span>
-									</a>
-								</th>
-								
-								<!-- <th style="font-weight: bold; text-align: center;">
-									<a th:href="${pagina.urlOrdenada('publisher.name')}"
-										th:remove="${pagina.vazia} ? tag">
-										<span style="color: white;">Editora</span>
-										<span class="dropup" 
-											th:remove="${pagina.descendente('publisher.name')} ? tag"
-											th:if="${pagina.ordenada('publisher.name')}">
-											<span class="dropdown-toggle"></span>
-										</span>
-									</a>
-								</th> -->
-								<th style="font-weight: bold; text-align: center;">Editora</th>
-								
-								<th style="font-weight: bold; text-align: center;">
-									<a th:href="${pagina.urlOrdenada('numberPages')}"
-										th:remove="${pagina.vazia} ? tag">
-										<span style="color: white;">Páginas</span>
-										<span class="dropup" 
-											th:remove="${pagina.descendente('numberPages')} ? tag"
-											th:if="${pagina.ordenada('numberPages')}">
-											<span class="dropdown-toggle"></span>
-										</span>
-									</a>
-								</th>
-								
-								<th style="font-weight: bold; text-align: center;">
-									<a th:href="${pagina.urlOrdenada('yearPublication')}"
-										th:remove="${pagina.vazia} ? tag">
-										<span style="color: white;">Ano Publicação</span>
-										<span class="dropup" 
-											th:remove="${pagina.descendente('yearPublication')} ? tag"
-											th:if="${pagina.ordenada('yearPublication')}">
-											<span class="dropdown-toggle"></span>
-										</span>
-									</a>
-								</th>
-								
-								<th style="font-weight: bold; text-align: center;">
-									<a th:href="${pagina.urlOrdenada('totalAmount')}"
-										th:remove="${pagina.vazia} ? tag">
-										<span style="color: white;">Quantidade Total</span>
-										<span class="dropup" 
-											th:remove="${pagina.descendente('totalAmount')} ? tag"
-											th:if="${pagina.ordenada('totalAmount')}">
-											<span class="dropdown-toggle"></span>
-										</span>
-									</a>
-								</th>
-								
-								<th>Ações</th>
-							</tr>
-						</thead>
-						
-						<tbody>
-							<tr th:each="livro : ${pagina.conteudo}">
-								<td th:text="${livro.id}"></td>
-								<td th:text="${livro.title}"></td>
-								<td th:text="${livro.author}"></td>
-								<td th:text="${livro.publisher.name}"></td>
-								<td th:text="${livro.numberPages}"></td>
-								<td th:text="${livro.yearPublication}"></td>
-								<td th:text="${livro.totalAmount}"></td>
-								<td>
-									<a class="btn btn-sm btn-info" th:href="@{/livro/alterar/{id} (id=${livro.id})}">
-										<i class="fa fa-pencil"></i>
-									</a>
-									<a class="btn btn-sm btn-danger" th:href="@{/livro/excluir/{id} (id=${livro.id})}">
-										<i class="fa fa-trash"></i>
-									</a> 
-									<a class="btn btn-sm btn-primary" th:href="@{/livro/consultar/{id} (id=${livro.id})}">
-										<i class="fa fa-search"></i>
-									</a>
-								</td>
-							</tr>
-						</tbody>
-					</table>
+					
+					<div id="no-more-tables">
+						<table id="tabela" class="table table-stripped table-bordered table-hover cf">
+							<thead class="cf">
+								<tr class="p-3 mb-2 bg-primary text-white">
+									
+									<th style="font-weight: bold; text-align: center;">
+										<a th:href="${pagina.urlOrdenada('id')}"
+											th:remove="${pagina.vazia} ? tag">
+											<span style="color: white;">ID</span>
+											<span class="dropup" 
+												th:remove="${pagina.descendente('id')} ? tag"
+												th:if="${pagina.ordenada('id')}">
+												<span class="dropdown-toggle"></span>
+											</span>
+										</a>
+									</th>
+									
+									<th style="font-weight: bold; text-align: center;">
+										<a th:href="${pagina.urlOrdenada('title')}"
+											th:remove="${pagina.vazia} ? tag">
+											<span style="color: white;">Título</span>
+											<span class="dropup" 
+												th:remove="${pagina.descendente('title')} ? tag"
+												th:if="${pagina.ordenada('title')}">
+												<span class="dropdown-toggle"></span>
+											</span>
+										</a>
+									</th>
+									
+									<th style="font-weight: bold; text-align: center;">
+										<a th:href="${pagina.urlOrdenada('author')}"
+											th:remove="${pagina.vazia} ? tag">
+											<span style="color: white;">Autor</span>
+											<span class="dropup" 
+												th:remove="${pagina.descendente('author')} ? tag"
+												th:if="${pagina.ordenada('author')}">
+												<span class="dropdown-toggle"></span>
+											</span>
+										</a>
+									</th>
+									
+									<!-- <th style="font-weight: bold; text-align: center;">
+										<a th:href="${pagina.urlOrdenada('publisher.name')}"
+											th:remove="${pagina.vazia} ? tag">
+											<span style="color: white;">Editora</span>
+											<span class="dropup" 
+												th:remove="${pagina.descendente('publisher.name')} ? tag"
+												th:if="${pagina.ordenada('publisher.name')}">
+												<span class="dropdown-toggle"></span>
+											</span>
+										</a>
+									</th> -->
+									<th style="font-weight: bold; text-align: center;">Editora</th>
+									
+									<th style="font-weight: bold; text-align: center;">
+										<a th:href="${pagina.urlOrdenada('numberPages')}"
+											th:remove="${pagina.vazia} ? tag">
+											<span style="color: white;">Páginas</span>
+											<span class="dropup" 
+												th:remove="${pagina.descendente('numberPages')} ? tag"
+												th:if="${pagina.ordenada('numberPages')}">
+												<span class="dropdown-toggle"></span>
+											</span>
+										</a>
+									</th>
+									
+									<th style="font-weight: bold; text-align: center;">
+										<a th:href="${pagina.urlOrdenada('yearPublication')}"
+											th:remove="${pagina.vazia} ? tag">
+											<span style="color: white;">Ano Publicação</span>
+											<span class="dropup" 
+												th:remove="${pagina.descendente('yearPublication')} ? tag"
+												th:if="${pagina.ordenada('yearPublication')}">
+												<span class="dropdown-toggle"></span>
+											</span>
+										</a>
+									</th>
+									
+									<th style="font-weight: bold; text-align: center;">
+										<a th:href="${pagina.urlOrdenada('totalAmount')}"
+											th:remove="${pagina.vazia} ? tag">
+											<span style="color: white;">Quantidade Total</span>
+											<span class="dropup" 
+												th:remove="${pagina.descendente('totalAmount')} ? tag"
+												th:if="${pagina.ordenada('totalAmount')}">
+												<span class="dropdown-toggle"></span>
+											</span>
+										</a>
+									</th>
+									
+									<th>Ações</th>
+								</tr>
+							</thead>
+							
+							<tbody>
+								<tr th:each="livro : ${pagina.conteudo}">
+									<td data-title="ID" th:text="${livro.id}"></td>
+									<td data-title="Título" th:text="${livro.title}"></td>
+									<td data-title="Autor" th:text="${livro.author}"></td>
+									<td data-title="Editora" th:text="${livro.publisher.name}"></td>
+									<td data-title="Páginas" th:text="${livro.numberPages}"></td>
+									<td data-title="Ano" th:text="${livro.yearPublication}"></td>
+									<td data-title="Quantidade" th:text="${livro.totalAmount}"></td>
+									<td data-title="Ação">
+										<a class="btn btn-sm btn-info" th:href="@{/livro/alterar/{id} (id=${livro.id})}">
+											<i class="fa fa-pencil"></i>
+										</a>
+										<a class="btn btn-sm btn-danger" th:href="@{/livro/excluir/{id} (id=${livro.id})}">
+											<i class="fa fa-trash"></i>
+										</a> 
+										<a class="btn btn-sm btn-primary" th:href="@{/livro/consultar/{id} (id=${livro.id})}">
+											<i class="fa fa-search"></i>
+										</a>
+									</td>
+								</tr>
+							</tbody>
+						</table>
+					</div>
 					
 					<div th:replace="fragments/paginacao"></div>
 					

@@ -44,121 +44,148 @@
 			        		th:field="*{id}" />
 			        
 			        	<div class="row">
-			        		<div class="col-xs-12 col-sm-12 col-md-12">
-			        			<div class="form-group">
-						            <label class="control-label">Nome</label>
-						            <input type="text" 
-						            	id="username" 
-						            	name="username" 
-						            	th:field="*{username}"
-						            	th:classappend="${#fields.hasErrors('username')} ? 'is-invalid'"
-						             	class="form-control" />
-						             
-						             <div class="invalid-feedback">
-						             	<span th:errors="*{username}"></span>
-						             </div>
-					            </div>
-				            </div>
-						</div>
-						
-						<div class="row">
-			        		<div class="col-xs-12 col-sm-12 col-md-12">
-			        			<div class="form-group">
-						            <label class="control-label">E-mail</label>
-						            <input type="text" 
-						            	id="email" 
-						            	name="email" 
-						            	th:field="*{email}" 
-						            	th:classappend="${#fields.hasErrors('email')} ? 'is-invalid'"
-						            	class="form-control" />
-						            
-						            <div class="invalid-feedback">
-						             	<span th:errors="*{email}"></span>
-						            </div>
-						        </div>
-						    </div>
-						</div>
-						
-						<div class="row">
-			        		<div class="col-xs-12 col-sm-12 col-md-12">
-			        			<div class="form-group">
-						            <label class="control-label">Senha</label>
-						            <input type="text" 
-						            	id="password" 
-						            	name="password" 
-						            	th:field="*{password}" 
-						            	th:classappend="${#fields.hasErrors('password')} ? 'is-invalid'"
-						            	class="form-control" />
-						            
-						            <div class="invalid-feedback">
-						             	<span th:errors="*{password}"></span>
-						            </div>
-						 		</div>
-						    </div>
-						</div>
-						
-						<div class="row">
-			        		<div class="col-xs-12 col-sm-12 col-md-12">
-			        			<div class="form-group">
-						            <label class="control-label">Confirma Senha</label>
-						            <input type="text" 
-						            	id="confirmPassword" 
-						            	name="confirmPassword" 
-						            	th:field="*{confirmPassword}" 
-						            	th:classappend="${#fields.hasErrors('confirmPassword')} ? 'is-invalid'"
-						            	class="form-control" />
-						            	
-						            <div class="invalid-feedback">
-						             	<span th:errors="*{confirmPassword}"></span>
-						            </div>
-						        </div>
-						    </div>
-						</div>
-						
-						<div class="row">
-							<div class="col-xs-12 col-sm-12 col-md-12">
-								<div class="form-group">
-									<label class="control-label">Departamento</label> 
-									
-									<select
-										id="selectDepartamento" 
-										name="departamento"
-										th:field="*{departamento}"
-										class="form-control dropdown-select-simple" >
-										
-										<option th:each="departamento : ${departamentos}" 
-												th:value="${departamento.id}"
-												th:text="${departamento.name}"
-												th:selected="${selected} eq ${departamento}"
-												th:classappend="${#fields.hasErrors('departamento.id')} ? 'is-invalid'"></option>
-									</select>	
-									
-									<div class="invalid-feedback">
-										<span th:errors="*{departamento}"></span>
-									</div>
-								</div>
-							</div>
-						</div>
-						
-						<fieldset>
-							<legend>Grupos de Trabalho</legend>
-							<div class="row">
-								<th:block th:each="grupo : ${roles}">
-									<div class="col-xs-12 col-sm-12 col-md-12 col-lg-4 col-xl-4">
+			        		<div class="col-sm-4">
+			        			<div class="row">
+			        				<div class="col-xs-12 col-sm-12 col-md-12">
+			        					<div class="form-group">
+			        						<div id="drop-zone">
+			        							<input type="hidden" th:field="*{photo}" id="foto" />
+			        							<input type="hidden" th:field="*{contentType}" id="contentType" />
+			        							<div id="fotoDisco">
+			        								<img th:src="@{/img/default-avatar.png}" 
+			        									class="avatar"
+			        									id="imageUpload"
+			        									name="upload" />
+			        							</div>
+			        							<div id="fotoBanco">
+			        								<img th:src="@{/foto/{photo}(foto=${usuario.photo})}" 
+			        									class="avatar" />
+			        							</div>
+			        							
+			        							<div id="clickHereLeft">
+			        								<input type="file" 
+			        									accept=".jpg, .jpeg, .png"
+			        									id="fileInput"
+			        									class="form-control hide btn-responsive" />
+			        									
+			        								<div style="text-align: center;">
+			        									<label for="fileInput">
+			        										<i class="fa fa-upload fa-lg"></i>
+			        									</label>
+			        								</div>
+			        							</div>
+			        						</div>
+			        					</div>
+			        				</div>
+			        			</div>
+			        			
+			        		</div>
+
+							<div class="col-sm-8">
+								<div class="row">
+									<div class="col-xs-12 col-sm-12 col-md-12">
 										<div class="form-group">
-											<label th:text="${grupo.name}"></label>
-											<div class="make-switch switch-large">
-												<input type="checkbox" th:value="${grupo.id}"
-													th:field="*{roles}" class="js-status"
-													data-off-color="danger"
-													data-on-text="<i class='fa fa-check'></i>"
-													data-off-text="<i class='fa fa-times'></i>" />
+											<label class="control-label">Nome</label> <input type="text"
+												id="username" name="username" th:field="*{username}"
+												th:classappend="${#fields.hasErrors('username')} ? 'is-invalid'"
+												class="form-control" />
+
+											<div class="invalid-feedback">
+												<span th:errors="*{username}"></span>
 											</div>
 										</div>
 									</div>
-								</th:block>
+								</div>
+
+								<div class="row">
+									<div class="col-xs-12 col-sm-12 col-md-12">
+										<div class="form-group">
+											<label class="control-label">E-mail</label> <input
+												type="text" id="email" name="email" th:field="*{email}"
+												th:classappend="${#fields.hasErrors('email')} ? 'is-invalid'"
+												class="form-control" />
+
+											<div class="invalid-feedback">
+												<span th:errors="*{email}"></span>
+											</div>
+										</div>
+									</div>
+								</div>
+
+								<div class="row">
+									<div class="col-xs-12 col-sm-12 col-md-12">
+										<div class="form-group">
+											<label class="control-label">Senha</label> <input type="text"
+												id="password" name="password" th:field="*{password}"
+												th:classappend="${#fields.hasErrors('password')} ? 'is-invalid'"
+												class="form-control" />
+
+											<div class="invalid-feedback">
+												<span th:errors="*{password}"></span>
+											</div>
+										</div>
+									</div>
+								</div>
+
+								<div class="row">
+									<div class="col-xs-12 col-sm-12 col-md-12">
+										<div class="form-group">
+											<label class="control-label">Confirma Senha</label> <input
+												type="text" id="confirmPassword" name="confirmPassword"
+												th:field="*{confirmPassword}"
+												th:classappend="${#fields.hasErrors('confirmPassword')} ? 'is-invalid'"
+												class="form-control" />
+
+											<div class="invalid-feedback">
+												<span th:errors="*{confirmPassword}"></span>
+											</div>
+										</div>
+									</div>
+								</div>
+
+								<div class="row">
+									<div class="col-xs-12 col-sm-12 col-md-12">
+										<div class="form-group">
+											<label class="control-label">Departamento</label> <select
+												id="selectDepartamento" name="departamento"
+												th:field="*{departamento}"
+												class="form-control dropdown-select-simple">
+
+												<option th:each="departamento : ${departamentos}"
+													th:value="${departamento.id}"
+													th:text="${departamento.name}"
+													th:selected="${selected} eq ${departamento}"
+													th:classappend="${#fields.hasErrors('departamento.id')} ? 'is-invalid'"></option>
+											</select>
+
+											<div class="invalid-feedback">
+												<span th:errors="*{departamento}"></span>
+											</div>
+										</div>
+									</div>
+								</div>
+
+								<fieldset>
+									<legend>Grupos de Trabalho</legend>
+									<div class="row">
+										<th:block th:each="grupo : ${roles}">
+											<div class="col-xs-12 col-sm-12 col-md-12 col-lg-4 col-xl-4">
+												<div class="form-group">
+													<label th:text="${grupo.name}"></label>
+													<div class="make-switch switch-large">
+														<input type="checkbox" th:value="${grupo.id}"
+															th:field="*{roles}" class="js-status"
+															data-off-color="danger"
+															data-on-text="<i class='fa fa-check'></i>"
+															data-off-text="<i class='fa fa-times'></i>" />
+													</div>
+												</div>
+											</div>
+										</th:block>
+									</div>
+								</fieldset>
 							</div>
-						</fieldset>
+						</div>
 			
 			            <div class="tile-footer">
 			            	<button type="button" 
@@ -241,6 +268,66 @@
 				event.preventDefault();
 				$('#formUsuario').submit();
 			})
+			
+			var update = false;
+			
+			$(document).ready(function() {
+				if (update == true) {
+					$("#fotoDisco").hide();
+					$("#fotoBanco").show();
+					update = false;
+				} else {
+					$("#fotoDisco").show();
+					$("#fotoBanco").hide();
+				}
+			});
+			
+			$("#fileInput").change(function(event) {
+				enviarFoto(this);
+			});
+			
+			function enviarFoto(input) {
+				if (input.files && input.files[0]) {
+					var reader = new FileReader();
+					var fileName = $("#fileInput").val();
+					fileName = fileName.substring(fileName.lastIndexOf("\\")+1);
+					reader.onload = function(e) {
+						$("#imageUpload").attr("src", e.target.result);
+						$("#imageUpload").hide();
+						$("#imageUpload").fadeIn(500);
+					}
+					reader.readAsDataURL(input.files[0]);
+					sendToServer(input.files[0]);
+				}
+			}
+			
+			function sendToServer(input) {
+				var token = $("#_csrf").attr("content");
+				var header = $("#_csrf_header").attr("content");
+				
+				var formData = new FormData();
+				var host = location.protocol + "//" + $(location).attr("host");
+				
+				if (formData) {
+					formData.append("foto", input);
+					
+					$.ajax({
+						url: host + "/foto/gravar",
+						method: "POST",
+						data: formData,
+						dataType: "json",
+						processData: false,
+						contentType: false,
+					/* 	beforeSend: function(xhr) {
+							xhr.setRequestHeader(header, token);
+						}, */
+						success: function(response) {
+							$("#foto").val(response.nomeArquivo);
+							$("#contentType").val(response.contentType);
+						},
+					});
+				}
+			}
 		
 		</script>
 	</th:block>	
