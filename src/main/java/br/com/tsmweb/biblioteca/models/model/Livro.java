@@ -61,9 +61,15 @@ public class Livro implements Serializable  {
 	@NotNull(message = "A quantidade total de livros é obrigatório")
 	@Column(name = "TOTAL_AMOUNT", nullable = false)
 	private Integer totalAmount;
-
-	public Livro(Long id, Editora publisher, String title, String author, Integer numberPages, Integer yearPublication,
-			Integer totalAmount) {
+	
+	@Column(name = "PHOTO", length = 100, nullable = true)
+	private String photo;
+	
+	@Column(name = "CONTENT_TYPE", length = 30, nullable = true)
+	private String contentType;
+	
+	public Livro(Long id, Editora publisher, String title, String author, Integer numberPages,
+		Integer yearPublication, Integer totalAmount, String photo, String contentType) {
 		this.id = id;
 		this.publisher = publisher;
 		this.title = title;
@@ -71,8 +77,10 @@ public class Livro implements Serializable  {
 		this.numberPages = numberPages;
 		this.yearPublication = yearPublication;
 		this.totalAmount = totalAmount;
+		this.photo = photo;
+		this.contentType = contentType;
 	}
-	
+
 	public Livro() {}
 
 	public Long getId() {
@@ -131,6 +139,22 @@ public class Livro implements Serializable  {
 		this.totalAmount = totalAmount;
 	}
 
+	public String getPhoto() {
+		return photo;
+	}
+
+	public void setPhoto(String photo) {
+		this.photo = photo;
+	}
+
+	public String getContentType() {
+		return contentType;
+	}
+
+	public void setContentType(String contentType) {
+		this.contentType = contentType;
+	}
+
 	@Override
 	public int hashCode() {
 		final int prime = 31;
@@ -159,7 +183,8 @@ public class Livro implements Serializable  {
 	@Override
 	public String toString() {
 		return "Livro [id=" + id + ", publisher=" + publisher + ", title=" + title + ", author=" + author
-				+ ", numberPages=" + numberPages + ", yearPublication=" + yearPublication + ", totalAmount=" + totalAmount + "]";
+				+ ", numberPages=" + numberPages + ", yearPublication=" + yearPublication + ", totalAmount="
+				+ totalAmount + ", photo=" + photo + ", contentType=" + contentType + "]";
 	}
 
 }

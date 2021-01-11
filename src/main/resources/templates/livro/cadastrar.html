@@ -42,123 +42,162 @@
 			        		th:field="*{id}" />
 			        
 			        	<div class="row">
-			        		<div class="col-xs-12 col-sm-12 col-md-12">
-			        			<div class="form-group">
-						            <label class="control-label">Título</label>
-						            <input type="text" 
-						            	id="title" 
-						            	name="title" 
-						            	th:field="*{title}"
-						            	th:classappend="${#fields.hasErrors('title')} ? 'is-invalid'"
-						             	class="form-control" />
-						             
-						             <div class="invalid-feedback">
-						             	<span th:errors="*{title}"></span>
-						             </div>
-					            </div>
-				            </div>
-						</div>
-						
-						<div class="row">
-			        		<div class="col-xs-12 col-sm-12 col-md-12">
-			        			<div class="form-group">
-						            <label class="control-label">Autor</label>
-						            <input type="text" 
-						            	id="author" 
-						            	name="author" 
-						            	th:field="*{author}" 
-						            	th:classappend="${#fields.hasErrors('author')} ? 'is-invalid'"
-						            	class="form-control" />
-						            
-						            <div class="invalid-feedback">
-						             	<span th:errors="*{author}"></span>
+			        		<div class="col-sm-4">
+			        			<div class="row">
+			        				<div class="col-xs-12 col-sm-12 col-md-12">
+			        					<div class="form-group">
+			        						<div id="drop-zone">
+			        							<input type="hidden" th:field="*{photo}" id="foto" />
+			        							<input type="hidden" th:field="*{contentType}" id="contentType" />
+			        							<div id="fotoDisco">
+			        								<img th:src="@{/img/default-image.png}" 
+			        									class="img-fluid"
+			        									id="imageUpload"
+			        									name="upload" />
+			        							</div>
+			        							<div id="fotoBanco">
+			        								<img th:src="@{/foto/{photo}(foto=${livro.photo})}" 
+			        									class="img-fluid" />
+			        							</div>
+			        							
+			        							<div id="clickHereLeft">
+			        								<input type="file" 
+			        									accept=".jpg, .jpeg, .png"
+			        									id="fileInput"
+			        									class="form-control hide btn-responsive" />
+			        									
+			        								<div style="text-align: center;">
+			        									<label for="fileInput">
+			        										<i class="fa fa-upload fa-lg"></i>
+			        									</label>
+			        								</div>
+			        							</div>
+			        						</div>
+			        					</div>
+			        				</div>
+			        			</div>
+							</div>
+							
+							<div class="col-sm-8">
+								<div class="row">
+					        		<div class="col-xs-12 col-sm-12 col-md-12">
+					        			<div class="form-group">
+								            <label class="control-label">Título</label>
+								            <input type="text" 
+								            	id="title" 
+								            	name="title" 
+								            	th:field="*{title}"
+								            	th:classappend="${#fields.hasErrors('title')} ? 'is-invalid'"
+								             	class="form-control" />
+								             
+								             <div class="invalid-feedback">
+								             	<span th:errors="*{title}"></span>
+								             </div>
+							            </div>
 						            </div>
-						        </div>
-						    </div>
-						</div>
-						
-						<div class="row">
-							<div class="col-xs-12 col-sm-12 col-md-12">
-								<div class="form-group">
-									<label class="control-label">Editora</label> 
-									
-									<select
-										id="selectEditora" 
-										name="editora"
-										th:field="*{publisher}"
-										class="form-control dropdown-select-simple" >
-
-										<option th:each="editora : ${editoras}" 
-												th:value="${editora.id}"
-												th:text="${editora.name}"
-												th:selected="${selected} eq ${editora}"
-												th:classappend="${#fields.hasErrors('publisher.id')} ? 'is-invalid'"></option>
-									</select>	
-									
-									<div class="invalid-feedback">
-										<span th:errors="*{publisher}"></span>
+								</div>
+							
+								<div class="row">
+					        		<div class="col-xs-12 col-sm-12 col-md-12">
+					        			<div class="form-group">
+								            <label class="control-label">Autor</label>
+								            <input type="text" 
+								            	id="author" 
+								            	name="author" 
+								            	th:field="*{author}" 
+								            	th:classappend="${#fields.hasErrors('author')} ? 'is-invalid'"
+								            	class="form-control" />
+								            
+								            <div class="invalid-feedback">
+								             	<span th:errors="*{author}"></span>
+								            </div>
+								        </div>
+								    </div>
+								</div>
+								
+								<div class="row">
+									<div class="col-xs-12 col-sm-12 col-md-12">
+										<div class="form-group">
+											<label class="control-label">Editora</label> 
+											
+											<select
+												id="selectEditora" 
+												name="editora"
+												th:field="*{publisher}"
+												class="form-control dropdown-select-simple" >
+		
+												<option th:each="editora : ${editoras}" 
+														th:value="${editora.id}"
+														th:text="${editora.name}"
+														th:selected="${selected} eq ${editora}"
+														th:classappend="${#fields.hasErrors('publisher.id')} ? 'is-invalid'"></option>
+											</select>	
+											
+											<div class="invalid-feedback">
+												<span th:errors="*{publisher}"></span>
+											</div>
+										</div>
 									</div>
 								</div>
-							</div>
-						</div>
-						
-						<div class="row">
-			        		<div class="col-xs-12 col-sm-12 col-md-12">
-			        			<div class="form-group">
-						            <label class="control-label">Páginas</label>
-						            <input type="number" 
-						            	id="numberPages" 
-						            	name="numberPages" 
-						            	th:field="*{numberPages}" 
-						            	th:classappend="${#fields.hasErrors('numberPages')} ? 'is-invalid'"
-						            	class="form-control" />
-						            
-						            <div class="invalid-feedback">
-						             	<span th:errors="*{numberPages}"></span>
-						            </div>
-						 		</div>
-						    </div>
-						</div>
-						
-						<div class="row">
-			        		<div class="col-xs-12 col-sm-12 col-md-12">
-			        			<div class="form-group">
-						            <label class="control-label">Ano Publicação</label>
-						            <input type="number" 
-						            	id="yearPublication" 
-						            	name="yearPublication" 
-						            	th:field="*{yearPublication}" 
-						            	th:classappend="${#fields.hasErrors('yearPublication')} ? 'is-invalid'"
-						            	class="form-control" />
-						            	
-						            <div class="invalid-feedback">
-						             	<span th:errors="*{yearPublication}"></span>
-						            </div>
-						        </div>
-						    </div>
-						</div>
-						
-						<div class="row">
-			        		<div class="col-xs-12 col-sm-12 col-md-12">
-			        			<div class="form-group">
-						            <label class="control-label">Quantidade Total</label>
-						            <input type="number" 
-						            	id="totalAmount" 
-						            	name="totalAmount" 
-						            	th:field="*{totalAmount}" 
-						            	th:classappend="${#fields.hasErrors('totalAmount')} ? 'is-invalid'"
-						            	class="form-control" />
-						            	
-						            <div class="invalid-feedback">
-						             	<span th:errors="*{totalAmount}"></span>
-						            </div>
-						        </div>
-						    </div>
-						</div>
-			
-			            <div class="tile-footer">
-			            	<button type="button" class="btn btn-primary" id="btnModal">Salvar</button>
-			            	<a th:href="@{/livro/listar}" class="btn btn-warning">Cancelar</a>
+								
+								<div class="row">
+					        		<div class="col-xs-12 col-sm-12 col-md-12">
+					        			<div class="form-group">
+								            <label class="control-label">Páginas</label>
+								            <input type="number" 
+								            	id="numberPages" 
+								            	name="numberPages" 
+								            	th:field="*{numberPages}" 
+								            	th:classappend="${#fields.hasErrors('numberPages')} ? 'is-invalid'"
+								            	class="form-control" />
+								            
+								            <div class="invalid-feedback">
+								             	<span th:errors="*{numberPages}"></span>
+								            </div>
+								 		</div>
+								    </div>
+								</div>
+								
+								<div class="row">
+					        		<div class="col-xs-12 col-sm-12 col-md-12">
+					        			<div class="form-group">
+								            <label class="control-label">Ano Publicação</label>
+								            <input type="number" 
+								            	id="yearPublication" 
+								            	name="yearPublication" 
+								            	th:field="*{yearPublication}" 
+								            	th:classappend="${#fields.hasErrors('yearPublication')} ? 'is-invalid'"
+								            	class="form-control" />
+								            	
+								            <div class="invalid-feedback">
+								             	<span th:errors="*{yearPublication}"></span>
+								            </div>
+								        </div>
+								    </div>
+								</div>
+								
+								<div class="row">
+					        		<div class="col-xs-12 col-sm-12 col-md-12">
+					        			<div class="form-group">
+								            <label class="control-label">Quantidade Total</label>
+								            <input type="number" 
+								            	id="totalAmount" 
+								            	name="totalAmount" 
+								            	th:field="*{totalAmount}" 
+								            	th:classappend="${#fields.hasErrors('totalAmount')} ? 'is-invalid'"
+								            	class="form-control" />
+								            	
+								            <div class="invalid-feedback">
+								             	<span th:errors="*{totalAmount}"></span>
+								            </div>
+								        </div>
+								    </div>
+								</div>
+					
+					            <div class="tile-footer">
+					            	<button type="button" class="btn btn-primary" id="btnModal">Salvar</button>
+					            	<a th:href="@{/livro/listar}" class="btn btn-warning">Cancelar</a>
+					            </div>
 			            </div>
 			        </form>
 				</div>
@@ -229,6 +268,66 @@
 				event.preventDefault();
 				$('#formLivro').submit();
 			})
+			
+			var update = false;
+			
+			$(document).ready(function() {
+				if (update == true) {
+					$("#fotoDisco").hide();
+					$("#fotoBanco").show();
+					update = false;
+				} else {
+					$("#fotoDisco").show();
+					$("#fotoBanco").hide();
+				}
+			});
+			
+			$("#fileInput").change(function(event) {
+				enviarFoto(this);
+			});
+			
+			function enviarFoto(input) {
+				if (input.files && input.files[0]) {
+					var reader = new FileReader();
+					var fileName = $("#fileInput").val();
+					fileName = fileName.substring(fileName.lastIndexOf("\\")+1);
+					reader.onload = function(e) {
+						$("#imageUpload").attr("src", e.target.result);
+						$("#imageUpload").hide();
+						$("#imageUpload").fadeIn(500);
+					}
+					reader.readAsDataURL(input.files[0]);
+					sendToServer(input.files[0]);
+				}
+			}
+			
+			function sendToServer(input) {
+				var token = $("#_csrf").attr("content");
+				var header = $("#_csrf_header").attr("content");
+				
+				var formData = new FormData();
+				var host = location.protocol + "//" + $(location).attr("host");
+				
+				if (formData) {
+					formData.append("foto", input);
+					
+					$.ajax({
+						url: host + "/foto/gravar",
+						method: "POST",
+						data: formData,
+						dataType: "json",
+						processData: false,
+						contentType: false,
+					/* 	beforeSend: function(xhr) {
+							xhr.setRequestHeader(header, token);
+						}, */
+						success: function(response) {
+							$("#foto").val(response.nomeArquivo);
+							$("#contentType").val(response.contentType);
+						},
+					});
+				}
+			}
 		
 		</script>
 	</th:block>	
