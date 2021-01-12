@@ -99,7 +99,12 @@
 		    <artifactId>jasperreports-fonts</artifactId>
 		    <version>6.16.0</version>
 		</dependency>
-		
+		<dependency>
+		    <groupId>net.coobird</groupId>
+		    <artifactId>thumbnailator</artifactId>
+		    <version>0.4.13</version>
+		</dependency>
+
 	</dependencies>
 
 	<build>

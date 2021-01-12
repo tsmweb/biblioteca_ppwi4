@@ -51,18 +51,19 @@
 			        						<div id="drop-zone">
 			        							<input type="hidden" th:field="*{photo}" id="foto" />
 			        							<input type="hidden" th:field="*{contentType}" id="contentType" />
+			        							
 			        							<div id="fotoDisco">
 			        								<img th:src="@{/img/default-avatar.png}" 
 			        									class="avatar"
 			        									id="imageUpload"
 			        									name="upload" />
 			        							</div>
+			        							
 			        							<div id="fotoBanco">
-			        								<img th:src="@{/foto/{photo}(foto=${usuario.photo})}" 
-			        									class="avatar" />
+			        								<img th:src="@{/foto/{foto}(foto=${usuario.photo})}" class="avatar" />
 			        							</div>
 			        							
-			        							<div id="clickHereLeft">
+			        							<div id="clickHereLeft" style="float: left;">
 			        								<input type="file" 
 			        									accept=".jpg, .jpeg, .png"
 			        									id="fileInput"
@@ -74,6 +75,19 @@
 			        									</label>
 			        								</div>
 			        							</div>
+			        							
+			        							<div id="clickHereRight" style="float: right;">
+			        								<input type="button" 
+			        									id="fileExcluir"
+			        									class="form-control hide btn-responsive" />
+			        									
+			        								<div style="text-align: center;">
+			        									<label for="fileExcluir">
+			        										<i class="fa fa-trash fa-lg"></i>
+			        									</label>
+			        								</div>
+			        							</div>
+			        							
 			        						</div>
 			        					</div>
 			        				</div>
@@ -285,6 +299,10 @@
 				enviarFoto(this);
 			});
 			
+			$("#fileExcluir").click(function(event) {
+				excluirFoto();
+			});
+			
 			function enviarFoto(input) {
 				if (input.files && input.files[0]) {
 					var reader = new FileReader();
@@ -303,9 +321,8 @@
 			function sendToServer(input) {
 				var token = $("#_csrf").attr("content");
 				var header = $("#_csrf_header").attr("content");
-				
-				var formData = new FormData();
 				var host = location.protocol + "//" + $(location).attr("host");
+				var formData = new FormData();
 				
 				if (formData) {
 					formData.append("foto", input);
@@ -314,18 +331,54 @@
 						url: host + "/foto/gravar",
 						method: "POST",
 						data: formData,
-						dataType: "json",
+						dataType: "JSON",
 						processData: false,
 						contentType: false,
 					/* 	beforeSend: function(xhr) {
 							xhr.setRequestHeader(header, token);
 						}, */
 						success: function(response) {
+							console.log(response);
+							console.log(response.nomeArquivo);
+							console.log(response.contentType);
+							
 							$("#foto").val(response.nomeArquivo);
 							$("#contentType").val(response.contentType);
 						},
 					});
 				}
+			}
+			
+			function excluirFoto() {
+				var token = $("#_csrf").attr("content");
+				var header = $("#_csrf_header").attr("content");
+				var host = location.protocol + "//" + $(location).attr("host");
+				
+				var ExcluirFoto = {
+					nomeArquivo: $("#foto").val(),	
+				};
+
+					
+				$.ajax({
+					url: host + "/foto/excluir",
+					method: "POST",
+					data: JSON.stringify(ExcluirFoto),
+					dataType: "JSON",
+					contentType: "application/json",
+					processData: false,
+				/* 	beforeSend: function(xhr) {
+						xhr.setRequestHeader(header, token);
+					}, */
+					success: function(response) {
+						console.log(response.nomeArquivo);
+						
+						$("#fotoBanco").hide();
+						$("#fotoDisco").show();
+						$("#foto").val(response.nomeArquivo);
+						$("#contentType").val(response.contentType);
+						update = false;
+					},
+				});
 			}
 		
 		</script>

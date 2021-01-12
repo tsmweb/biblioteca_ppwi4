@@ -35,6 +35,10 @@ public class UsuarioService {
 			throw new ConfirmPasswordNaoInformadoException("O campo Confirme Senha deve ser preenchido!");
 		}
 		
+		if (usuario.getPhoto().isEmpty()) {
+			usuario.setPhoto("default-avatar.png");
+		}
+		
 		return usuarioRepository.save(usuario);
 	}
 	

@@ -22,6 +22,10 @@ public class LivroService {
 	private LivroRepository livroRepository;
 	
 	public Livro save(Livro livro) {
+		if (livro.getPhoto().isEmpty()) {
+			livro.setPhoto("default-image.png");
+		}
+		
 		return livroRepository.save(livro);
 	}
 	

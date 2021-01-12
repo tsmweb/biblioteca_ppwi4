@@ -84,6 +84,8 @@ public class UsuarioQueryImpl implements UsuarioQuery {
 				+ "u.usuario_id, "
 				+ "u.user_name AS usuario_name, "
 				+ "u.email AS usuario_email, "
+				+ "u.photo AS usuario_photo, "
+				+ "u.content_type AS usuario_content_type, "
 				+ "d.id AS departamento_id, "
 				+ "d.name AS departamento_name, "
 				+ "r.role_id, "
@@ -107,17 +109,19 @@ public class UsuarioQueryImpl implements UsuarioQuery {
 				usuario.get().setId(Long.valueOf(listaUsuario.get(i)[0].toString()));
 				usuario.get().setUsername(listaUsuario.get(i)[1].toString());
 				usuario.get().setEmail(listaUsuario.get(i)[2].toString());
+				usuario.get().setPhoto(listaUsuario.get(i)[3].toString());
+				usuario.get().setContentType(listaUsuario.get(i)[4].toString());
 				
-				if (listaUsuario.get(i)[3] != null) {
-					departamento.setId(Long.valueOf(listaUsuario.get(i)[3].toString()));
-					departamento.setName(listaUsuario.get(i)[4].toString());
+				if (listaUsuario.get(i)[5] != null) {
+					departamento.setId(Long.valueOf(listaUsuario.get(i)[5].toString()));
+					departamento.setName(listaUsuario.get(i)[6].toString());
 				}
 				
 				usuario.get().setDepartamento(departamento);
 				
-				if (listaUsuario.get(i)[5] != null) {
-					role.setId(Long.valueOf(listaUsuario.get(i)[5].toString()));
-					role.setName(listaUsuario.get(i)[6].toString());
+				if (listaUsuario.get(i)[7] != null) {
+					role.setId(Long.valueOf(listaUsuario.get(i)[7].toString()));
+					role.setName(listaUsuario.get(i)[8].toString());
 				}
 				
 				usuario.get().getRoles().add(role);

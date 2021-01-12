@@ -74,6 +74,8 @@
 						<table id="tabela" class="table table-stripped table-bordered table-hover cf">
 							<thead class="cf">
 								<tr class="p-3 mb-2 bg-primary text-white">
+									<th style="font-weight: bold; text-align: center;">Foto</th>
+								
 									<th style="font-weight: bold; text-align: center;">
 										<a th:href="${pagina.urlOrdenada('id')}"
 											th:remove="${pagina.vazia} ? tag">
@@ -116,6 +118,15 @@
 							
 							<tbody>
 								<tr th:each="usuario : ${pagina.conteudo}">
+									<td data-title="Foto">
+										<div th:if="${#strings.isEmpty(usuario.photo)}">
+											<img th:src="@{/img/thumbnail.default-avatar.png}" class="avatar" />
+										</div>
+										
+										<div th:if="${not #strings.isEmpty(usuario.photo)}">
+											<img th:src="@{/foto/thumbnail.{foto}(foto=${usuario.photo})}" class="avatar" />
+										</div>
+									</td>
 									<td data-title="ID" th:text="${usuario.id}"></td>
 									<td data-title="Nome" th:text="${usuario.username}"></td>
 									<td data-title="E-mail" th:text="${usuario.email}"></td>

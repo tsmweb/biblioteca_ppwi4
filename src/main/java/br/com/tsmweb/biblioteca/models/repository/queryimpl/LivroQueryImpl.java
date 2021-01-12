@@ -106,6 +106,8 @@ public class LivroQueryImpl implements LivroQuery {
 				+ "l.number_pages, "
 				+ "l.year_publication, "
 				+ "l.total_amount, "
+				+ "l.photo, "
+				+ "l.content_type, "
 				+ "e.id AS publisher_id, "
 				+ "e.name AS publisher_name "
 				+ "FROM livro l "
@@ -127,10 +129,12 @@ public class LivroQueryImpl implements LivroQuery {
 				livro.get().setNumberPages(Integer.valueOf(listaLivro.get(i)[3].toString()));
 				livro.get().setYearPublication(Integer.valueOf(listaLivro.get(i)[4].toString()));
 				livro.get().setTotalAmount(Integer.valueOf(listaLivro.get(i)[5].toString()));
+				livro.get().setPhoto(listaLivro.get(i)[6].toString());
+				livro.get().setContentType(listaLivro.get(i)[7].toString());
 				
-				if (listaLivro.get(i)[6] != null) {
-					editora.setId(Long.valueOf(listaLivro.get(i)[6].toString()));
-					editora.setName(listaLivro.get(i)[7].toString());
+				if (listaLivro.get(i)[8] != null) {
+					editora.setId(Long.valueOf(listaLivro.get(i)[8].toString()));
+					editora.setName(listaLivro.get(i)[9].toString());
 				}
 				
 				livro.get().setPublisher(editora);
