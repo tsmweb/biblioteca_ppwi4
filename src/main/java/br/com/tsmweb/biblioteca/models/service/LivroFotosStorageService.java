@@ -8,7 +8,7 @@ import org.springframework.stereotype.Service;
 import br.com.tsmweb.biblioteca.models.model.Livro;
 
 @Service
-public class LivroFotosStorageService extends LocalFotosStorageService<Livro> {
+public class LivroFotosStorageService extends LocalFotosStorageService {
 
 	@Autowired
 	private LivroService livroService;

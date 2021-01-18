@@ -18,7 +18,7 @@ import net.coobird.thumbnailator.Thumbnails;
 import net.coobird.thumbnailator.name.Rename;
 
 
-public abstract class LocalFotosStorageService<T> {
+public abstract class LocalFotosStorageService {
 
 	private Path diretorioFotos;
 	
