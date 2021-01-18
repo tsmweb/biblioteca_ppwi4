@@ -124,7 +124,7 @@
 										</div>
 										
 										<div th:if="${not #strings.isEmpty(usuario.photo)}">
-											<img th:src="@{/foto/thumbnail.{foto}(foto=${usuario.photo})}" class="avatar" />
+											<img th:src="@{/usuario/foto/thumbnail.{foto}(foto=${usuario.photo})}" class="avatar" />
 										</div>
 									</td>
 									<td data-title="ID" th:text="${usuario.id}"></td>

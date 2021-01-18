@@ -2,69 +2,67 @@ package br.com.tsmweb.biblioteca.web.rest;
 
 import java.io.IOException;
 
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.annotation.RestController;
-import org.springframework.web.multipart.MultipartFile;
 
-import br.com.tsmweb.biblioteca.models.model.dto.ExcluirFoto;
+import br.com.tsmweb.biblioteca.models.model.dto.FotoRequest;
 import br.com.tsmweb.biblioteca.models.model.dto.Foto;
 import br.com.tsmweb.biblioteca.models.service.LocalFotosStorageService;
 import br.com.tsmweb.biblioteca.models.service.exception.FileStorageException;
 
-@RestController
-@RequestMapping(value = "/foto")
 public class FotoRestController {
 	
-	@Autowired
 	private LocalFotosStorageService localFotosStorageService; 
 	
+	public FotoRestController(LocalFotosStorageService localFotosStorageService) {
+		this.localFotosStorageService = localFotosStorageService;
+	}
+
 	@PostMapping(value = "/gravar", 
 			consumes = MediaType.MULTIPART_FORM_DATA_VALUE, 
 			produces = MediaType.APPLICATION_JSON_VALUE)
-	public ResponseEntity<Foto> uploadFoto(@RequestParam MultipartFile foto) {
-		String nomeFoto = localFotosStorageService.gerarNomeArquivo(foto.getOriginalFilename());
-		Foto arquivoFoto = new Foto();
+	public ResponseEntity<Foto> uploadFoto(FotoRequest fotoRequest) {
+		Long id = convertIdToLong(fotoRequest);
+        Foto arquivoFoto = new Foto();
 		
-		try {	
-			arquivoFoto.setNomeArquivo(nomeFoto);
-			arquivoFoto.setInputStream(foto.getInputStream());
-			arquivoFoto.setContentType(foto.getContentType());
-			localFotosStorageService.armazenar(arquivoFoto);
-		} catch (FileStorageException e) {
-			e.printStackTrace();
+        try {
+			arquivoFoto.setId(id);
+			arquivoFoto.setNomeArquivo(fotoRequest.getFoto().getOriginalFilename());
+			arquivoFoto.setInputStream(fotoRequest.getFoto().getInputStream());
+			arquivoFoto.setContentType(fotoRequest.getFoto().getContentType());
+			arquivoFoto = localFotosStorageService.armazenar(arquivoFoto);
 		} catch (IOException e) {
-			e.printStackTrace();
-			throw new FileStorageException("Erro na gravação da foto", e.getCause());
+			throw new FileStorageException("Falha na gravação do arquivo de foto", e);
 		}
 		
-		return ResponseEntity.ok(arquivoFoto);
+        return ResponseEntity.ok().body(arquivoFoto);
 	}
 	
-	@PostMapping(value = "/excluir", 
+	@PostMapping(value = "/delete", 
 			consumes = MediaType.APPLICATION_JSON_VALUE, 
 			produces = MediaType.APPLICATION_JSON_VALUE)
-	public ResponseEntity<ExcluirFoto> excluirFoto(@RequestBody ExcluirFoto foto) {		
-		try {
-			localFotosStorageService.remover(foto);
-			foto.setNomeArquivo("default-avatar.png");
-		} catch (FileStorageException e) {
-			e.printStackTrace();
-		}
+	public ResponseEntity<FotoRequest> excluirFoto(@RequestBody FotoRequest fotoRequest) {		
+		Long id = convertIdToLong(fotoRequest);
+		Foto arquivoFoto = new Foto();
+		arquivoFoto.setId(id);
+		arquivoFoto.setNomeArquivo(fotoRequest.getNomeArquivo());
+		arquivoFoto = localFotosStorageService.excluirFoto(arquivoFoto);
+		fotoRequest.setNomeArquivo(arquivoFoto.getNomeArquivo());
 		
-		return ResponseEntity.ok(foto);
+		return ResponseEntity.ok().body(fotoRequest);
 	}
 	
 	@GetMapping("/{nomeFoto}")
 	public byte[] recuperarFoto(@PathVariable String nomeFoto) {
 		return localFotosStorageService.recuperarFoto(nomeFoto);
+	}
+	
+	private Long convertIdToLong(FotoRequest fotoRequest) {
+		return "".equals(fotoRequest.getId()) ?  0L : Long.valueOf(Long.valueOf(fotoRequest.getId()));
 	}
 
 }

@@ -8,4 +8,6 @@ public class ConfigProjeto {
 	
 	public static final String DIR_REPORTS = "/reports/";
 	
+	public static final String DIRETORIO_FOTOS = "/home/martins/Documentos/Trabalhos_Facu/files/fotos";
+	
 }

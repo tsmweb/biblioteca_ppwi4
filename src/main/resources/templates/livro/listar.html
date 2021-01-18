@@ -175,7 +175,7 @@
 										</div>
 										
 										<div th:if="${not #strings.isEmpty(livro.photo)}">
-											<img th:src="@{/foto/thumbnail.{foto}(foto=${livro.photo})}" class="img-fluid" />
+											<img th:src="@{/livro/foto/thumbnail.{foto}(foto=${livro.photo})}" class="img-fluid" />
 										</div>
 									</td>
 									<td data-title="ID" th:text="${livro.id}"></td>
