@@ -12,6 +12,6 @@ public interface UsuarioQuery {
 
 	Optional<Usuario> findUsuarioByEmail(String email);
 	Page<Usuario> listUsuarioByPage(UsuarioFiltro usuarioFiltro, Pageable pageable);
-	Optional<Usuario> findUsuarioById(Long id);
+//	Optional<Usuario> findUsuarioById(Long id);
 	
 }

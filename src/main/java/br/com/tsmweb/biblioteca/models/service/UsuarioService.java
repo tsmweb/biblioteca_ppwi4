@@ -24,6 +24,12 @@ public class UsuarioService {
 	@Autowired
 	private UsuarioRepository usuarioRepository;
 	
+	@Autowired
+	private DepartamentoService departamentoService;
+	
+	@Autowired
+	private RoleService roleService;
+	
 	public Usuario save(Usuario usuario) {
 		Optional<Usuario> usuarioCadastrado = findUsuarioByEmail(usuario.getEmail());
 		
@@ -38,6 +44,10 @@ public class UsuarioService {
 		if (usuario.getPhoto().isEmpty()) {
 			usuario.setPhoto("default-avatar.png");
 		}
+		
+		departamentoService.findDepartamentoById(usuario.getDepartamento().getId());
+		
+		usuario.getRoles().forEach(role -> roleService.findRoleById(role.getId()));
 		
 		return usuarioRepository.save(usuario);
 	}
@@ -64,8 +74,18 @@ public class UsuarioService {
 	}
 	
 	@Transactional(readOnly = true)
+	public Page<Usuario> findUserByName(String name, Pageable pageable) {
+		return usuarioRepository.findUserByName(name, pageable);
+	}
+	
+	@Transactional(readOnly = true)
 	public List<Usuario> findAll() {
 		return usuarioRepository.findAll();
+	}
+	
+	@Transactional(readOnly = true)
+	public Page<Usuario> findAll(Pageable pageable) {
+		return usuarioRepository.findAll(pageable);
 	}
 	
 	@Transactional(readOnly = true)

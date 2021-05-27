@@ -93,56 +93,56 @@ public class LivroQueryImpl implements LivroQuery {
 		return query.getSingleResult();
 	}
 
-	@SuppressWarnings("unchecked")
-	@Override
-	public Optional<Livro> findLivroById(Long id) {
-		List<Object[]> listaLivro = new ArrayList<>();
-		
-		Query query = entityManager.createNativeQuery(
-				"SELECT "
-				+ "l.id, "
-				+ "l.title, "
-				+ "l.author, "
-				+ "l.number_pages, "
-				+ "l.year_publication, "
-				+ "l.total_amount, "
-				+ "l.photo, "
-				+ "l.content_type, "
-				+ "e.id AS publisher_id, "
-				+ "e.name AS publisher_name "
-				+ "FROM livro l "
-				+ "LEFT JOIN editora e ON l.publisher_id = e.id "
-				+ "WHERE l.id = :id").setParameter("id", id);
-		
-		listaLivro = query.getResultList();
-		
-		Optional<Livro> livro = null;
-		
-		if (!listaLivro.isEmpty()) {
-			livro = Optional.of(new Livro());
-			Editora editora = new Editora();
-			
-			for (int i = 0; i < listaLivro.size(); i++) {
-				livro.get().setId(Long.valueOf(listaLivro.get(i)[0].toString()));
-				livro.get().setTitle(listaLivro.get(i)[1].toString());
-				livro.get().setAuthor(listaLivro.get(i)[2].toString());
-				livro.get().setNumberPages(Integer.valueOf(listaLivro.get(i)[3].toString()));
-				livro.get().setYearPublication(Integer.valueOf(listaLivro.get(i)[4].toString()));
-				livro.get().setTotalAmount(Integer.valueOf(listaLivro.get(i)[5].toString()));
-				livro.get().setPhoto(listaLivro.get(i)[6].toString());
-				livro.get().setContentType(listaLivro.get(i)[7].toString());
-				
-				if (listaLivro.get(i)[8] != null) {
-					editora.setId(Long.valueOf(listaLivro.get(i)[8].toString()));
-					editora.setName(listaLivro.get(i)[9].toString());
-				}
-				
-				livro.get().setPublisher(editora);
-			}
-		}
-		
-		
-		return livro;
-	}
+//	@SuppressWarnings("unchecked")
+//	@Override
+//	public Optional<Livro> findLivroById(Long id) {
+//		List<Object[]> listaLivro = new ArrayList<>();
+//		
+//		Query query = entityManager.createNativeQuery(
+//				"SELECT "
+//				+ "l.id, "
+//				+ "l.title, "
+//				+ "l.author, "
+//				+ "l.number_pages, "
+//				+ "l.year_publication, "
+//				+ "l.total_amount, "
+//				+ "l.photo, "
+//				+ "l.content_type, "
+//				+ "e.id AS publisher_id, "
+//				+ "e.name AS publisher_name "
+//				+ "FROM livro l "
+//				+ "LEFT JOIN editora e ON l.publisher_id = e.id "
+//				+ "WHERE l.id = :id").setParameter("id", id);
+//		
+//		listaLivro = query.getResultList();
+//		
+//		Optional<Livro> livro = null;
+//		
+//		if (!listaLivro.isEmpty()) {
+//			livro = Optional.of(new Livro());
+//			Editora editora = new Editora();
+//			
+//			for (int i = 0; i < listaLivro.size(); i++) {
+//				livro.get().setId(Long.valueOf(listaLivro.get(i)[0].toString()));
+//				livro.get().setTitle(listaLivro.get(i)[1].toString());
+//				livro.get().setAuthor(listaLivro.get(i)[2].toString());
+//				livro.get().setNumberPages(Integer.valueOf(listaLivro.get(i)[3].toString()));
+//				livro.get().setYearPublication(Integer.valueOf(listaLivro.get(i)[4].toString()));
+//				livro.get().setTotalAmount(Integer.valueOf(listaLivro.get(i)[5].toString()));
+//				livro.get().setPhoto(listaLivro.get(i)[6].toString());
+//				livro.get().setContentType(listaLivro.get(i)[7].toString());
+//				
+//				if (listaLivro.get(i)[8] != null) {
+//					editora.setId(Long.valueOf(listaLivro.get(i)[8].toString()));
+//					editora.setName(listaLivro.get(i)[9].toString());
+//				}
+//				
+//				livro.get().setPublisher(editora);
+//			}
+//		}
+//		
+//		
+//		return livro;
+//	}
 	
 }

@@ -38,25 +38,29 @@ public class Usuario implements Serializable {
 	private Long id;
 	
 	@Size(min = 3, max = 100, message="Digite o mínimo {min} e o máximo {max} caracteres")
-	@NotEmpty(message = "O nome do usuário é obrigatório")
-	@NotBlank(message = "O nome do usuário é obrigatório")
+	@NotEmpty(message = "O nome do usuário não pode ser vazio")
+	@NotBlank(message = "O nome do usuário não pode ser em branco")
 	@NotNull(message = "O nome do usuário é obrigatório")
 	@Column(name = "USER_NAME", length = 100, nullable = false)
 	private String username;
 	
 	@Size(min = 4, max = 100, message="Digite o mínimo {min} e o máximo {max} caracteres")
-	@NotEmpty(message = "A senha do usuário é obrigatório")
-	@NotBlank(message = "A senha do usuário é obrigatório")
+	@NotEmpty(message = "A senha do usuário não pode ser vazio")
+	@NotBlank(message = "A senha do usuário não pode ser em branco")
 	@NotNull(message = "A senha do usuário é obrigatório")
 	@Column(name = "PASSWORD", length = 100, nullable = false)
 	private String password;
 	
+	@Size(min = 4, max = 100, message="Digite o mínimo {min} e o máximo {max} caracteres")
+	@NotEmpty(message = "A confirmação da senha do usuário não pode ser vazio")
+	@NotBlank(message = "A confirmação da senha do usuário não pode ser em branco")
+	@NotNull(message = "A confirmação da senha do usuário é obrigatório")
 	@Transient
 	private String confirmPassword;
 	
 	@Size(min = 10, max = 100, message="Digite o mínimo {min} e o máximo {max} caracteres")
-	@NotEmpty(message = "O e-mail do usuário é obrigatório")
-	@NotBlank(message = "O e-mail do usuário é obrigatório")
+	@NotEmpty(message = "O e-mail do usuário não pode ser vazio")
+	@NotBlank(message = "O e-mail do usuário não pode ser em branco")
 	@NotNull(message = "O e-mail do usuário é obrigatório")
 	@Column(name = "EMAIL", length = 100, nullable = false, unique = true)
 	private String email;
@@ -78,10 +82,12 @@ public class Usuario implements Serializable {
 	@Column(name = "CONTENT_TYPE", length = 30, nullable = true)
 	private String contentType;
 	
+	@NotNull(message = "O identificador do Departamento não pode ser nulo.")
 	@ManyToOne(fetch = FetchType.LAZY)
 	@JoinColumn(name = "DEPARTAMENTO_ID", nullable = false)
 	private Departamento departamento;
 	
+	@Size(min = 1, message = "Informe pelo menos um papel para o usuário")
 	@ManyToMany(fetch = FetchType.LAZY)
 	@JoinTable(name = "USUARIO_ROLE", 
 		joinColumns = @JoinColumn(name = "USUARIO_ID"), 

@@ -16,6 +16,8 @@ import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.NotEmpty;
 import javax.validation.constraints.NotNull;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
+
 @Entity
 @Table(name = "ROLE")
 public class Role implements Serializable {
@@ -33,6 +35,7 @@ public class Role implements Serializable {
 	@Column(name = "name", length = 50, nullable = false)
 	private String name;
 	
+	@JsonIgnore
 	@ManyToMany(mappedBy = "roles", fetch = FetchType.EAGER)
 	private List<Usuario> usuarios = new ArrayList<>();
 

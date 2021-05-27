@@ -21,10 +21,15 @@ public class LivroService {
 	@Autowired
 	private LivroRepository livroRepository;
 	
+	@Autowired
+	private EditoraService editoraService;
+	
 	public Livro save(Livro livro) {
 		if (livro.getPhoto().isEmpty()) {
 			livro.setPhoto("default-image.png");
 		}
+		
+		editoraService.findEditoraById(livro.getPublisher().getId());
 		
 		return livroRepository.save(livro);
 	}
@@ -51,8 +56,18 @@ public class LivroService {
 	}
 	
 	@Transactional(readOnly = true)
+	public Page<Livro> findBookByTitle(String title, Pageable pageable) {
+		return livroRepository.findBookByTitle(title, pageable);
+	}
+	
+	@Transactional(readOnly = true)
 	public List<Livro> findAll() {
 		return livroRepository.findAll();
+	}
+	
+	@Transactional(readOnly = true)
+	public Page<Livro> findAll(Pageable pageable) {
+		return livroRepository.findAll(pageable);
 	}
 	
 	@Transactional(readOnly = true)

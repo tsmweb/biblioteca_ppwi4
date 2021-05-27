@@ -10,6 +10,7 @@ import org.springframework.transaction.annotation.Transactional;
 
 import br.com.tsmweb.biblioteca.models.model.Departamento;
 import br.com.tsmweb.biblioteca.models.repository.DepartamentoRepository;
+import br.com.tsmweb.biblioteca.models.service.exception.EntidadeNaoCadastradaException;
 import br.com.tsmweb.biblioteca.models.service.exception.IdNaoPodeSerZeroNuloException;
 import br.com.tsmweb.biblioteca.web.response.ResponseSelect2Data;
 
@@ -67,6 +68,13 @@ public class DepartamentoService {
 				.filter(d -> d.getName().toLowerCase().contains(query.toLowerCase()))
 				.map(d -> departamentoToResponseSelect2Data(d))
 				.collect(Collectors.toList());
+	}
+	
+	@Transactional(readOnly = true)
+	public Departamento findDepartamentoById(Long id) {
+		return departamentoRepository.findDepartamentoById(id)
+				.orElseThrow(() -> new EntidadeNaoCadastradaException("Departamento não está cadastrado"));
+		
 	}
 	
 	private ResponseSelect2Data departamentoToResponseSelect2Data(Departamento d) {

@@ -16,6 +16,8 @@ import javax.validation.constraints.NotEmpty;
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Size;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
+
 @Entity
 @Table(name = "DEPARTAMENTO")
 public class Departamento implements Serializable {
@@ -34,12 +36,17 @@ public class Departamento implements Serializable {
 	@Column(name = "NAME", length = 50, nullable = false)
 	private String name;
 	
+	@JsonIgnore
 	@OneToMany(mappedBy = "departamento")
 	private List<Usuario> listaUsuarios = new ArrayList<>();
 	
 	public Departamento(Long id, String name) {
 		this.id = id;
 		this.name = name;
+	}
+	
+	public Departamento(Long id) {
+		this.id = id;
 	}
 	
 	public Departamento() {

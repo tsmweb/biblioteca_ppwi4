@@ -13,6 +13,7 @@ import org.springframework.transaction.annotation.Transactional;
 import br.com.tsmweb.biblioteca.models.model.Editora;
 import br.com.tsmweb.biblioteca.models.repository.EditoraRepository;
 import br.com.tsmweb.biblioteca.models.repository.filtros.EditoraFiltro;
+import br.com.tsmweb.biblioteca.models.service.exception.EntidadeNaoCadastradaException;
 import br.com.tsmweb.biblioteca.models.service.exception.IdNaoPodeSerZeroNuloException;
 import br.com.tsmweb.biblioteca.web.response.ResponseSelect2Data;
 
@@ -49,8 +50,18 @@ public class EditoraService {
 	}
 	
 	@Transactional(readOnly = true)
+	public Page<Editora> findPublisherByName(String name, Pageable pageable) {
+		return editoraRepository.findPublisherByName(name, pageable);
+	}
+	
+	@Transactional(readOnly = true)
 	public List<Editora> findAll() {
 		return editoraRepository.findAll(Sort.by(Sort.Direction.ASC, "name"));
+	}
+	
+	@Transactional(readOnly = true)
+	public Page<Editora> findAll(Pageable pageable) {
+		return editoraRepository.findAll(pageable);
 	}
 	
 	@Transactional(readOnly = true)
@@ -75,6 +86,13 @@ public class EditoraService {
 				.filter(e -> e.getName().toLowerCase().contains(query.toLowerCase()))
 				.map(e -> editoraToResponseSelect2Data(e))
 				.collect(Collectors.toList());
+	}
+	
+	@Transactional(readOnly = true)
+	public Editora findEditoraById(Long id) {
+		return editoraRepository.findEditoraById(id)
+				.orElseThrow(() -> new EntidadeNaoCadastradaException("Editora não está cadastrada"));
+		
 	}
 	
 	private ResponseSelect2Data editoraToResponseSelect2Data(Editora e) {

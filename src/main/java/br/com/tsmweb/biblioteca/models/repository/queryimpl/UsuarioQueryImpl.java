@@ -75,62 +75,62 @@ public class UsuarioQueryImpl implements UsuarioQuery {
 		return new PageImpl<Usuario>(lista, pageable, totalRegistros(predicate));
 	}
 	
-	@SuppressWarnings("unchecked")
-	@Override
-	public Optional<Usuario> findUsuarioById(Long id) {
-		List<Object[]> listaUsuario = new ArrayList<>();
-		
-		Query query = entityManager.createNativeQuery("SELECT "
-				+ "u.usuario_id, "
-				+ "u.user_name AS usuario_name, "
-				+ "u.email AS usuario_email, "
-				+ "u.photo AS usuario_photo, "
-				+ "u.content_type AS usuario_content_type, "
-				+ "d.id AS departamento_id, "
-				+ "d.name AS departamento_name, "
-				+ "r.role_id, "
-				+ "r.name AS role_name "
-				+ "FROM usuario u "
-				+ "LEFT JOIN departamento d ON u.departamento_id = d.id "
-				+ "LEFT JOIN usuario_role ur ON u.usuario_id = ur.usuario_id "
-				+ "LEFT JOIN role r ON ur.role_id = r.role_id "
-				+ "WHERE u.usuario_id = :id").setParameter("id", id);
-		
-		listaUsuario = query.getResultList();
-		
-		Optional<Usuario> usuario = null;
-		
-		if (!listaUsuario.isEmpty()) {
-			usuario = Optional.of(new Usuario());
-			Departamento departamento = new Departamento();
-			Role role = new Role();
-			
-			for (int i = 0; i < listaUsuario.size(); i++) {
-				usuario.get().setId(Long.valueOf(listaUsuario.get(i)[0].toString()));
-				usuario.get().setUsername(listaUsuario.get(i)[1].toString());
-				usuario.get().setEmail(listaUsuario.get(i)[2].toString());
-				usuario.get().setPhoto(listaUsuario.get(i)[3].toString());
-				usuario.get().setContentType(listaUsuario.get(i)[4].toString());
-				
-				if (listaUsuario.get(i)[5] != null) {
-					departamento.setId(Long.valueOf(listaUsuario.get(i)[5].toString()));
-					departamento.setName(listaUsuario.get(i)[6].toString());
-				}
-				
-				usuario.get().setDepartamento(departamento);
-				
-				if (listaUsuario.get(i)[7] != null) {
-					role.setId(Long.valueOf(listaUsuario.get(i)[7].toString()));
-					role.setName(listaUsuario.get(i)[8].toString());
-				}
-				
-				usuario.get().getRoles().add(role);
-			}
-		}
-		
-		
-		return usuario;
-	}
+//	@SuppressWarnings("unchecked")
+//	@Override
+//	public Optional<Usuario> findUsuarioById(Long id) {
+//		List<Object[]> listaUsuario = new ArrayList<>();
+//		
+//		Query query = entityManager.createNativeQuery("SELECT "
+//				+ "u.usuario_id, "
+//				+ "u.user_name AS usuario_name, "
+//				+ "u.email AS usuario_email, "
+//				+ "u.photo AS usuario_photo, "
+//				+ "u.content_type AS usuario_content_type, "
+//				+ "d.id AS departamento_id, "
+//				+ "d.name AS departamento_name, "
+//				+ "r.role_id, "
+//				+ "r.name AS role_name "
+//				+ "FROM usuario u "
+//				+ "LEFT JOIN departamento d ON u.departamento_id = d.id "
+//				+ "LEFT JOIN usuario_role ur ON u.usuario_id = ur.usuario_id "
+//				+ "LEFT JOIN role r ON ur.role_id = r.role_id "
+//				+ "WHERE u.usuario_id = :id").setParameter("id", id);
+//		
+//		listaUsuario = query.getResultList();
+//		
+//		Optional<Usuario> usuario = null;
+//		
+//		if (!listaUsuario.isEmpty()) {
+//			usuario = Optional.of(new Usuario());
+//			Departamento departamento = new Departamento();
+//			Role role = new Role();
+//			
+//			for (int i = 0; i < listaUsuario.size(); i++) {
+//				usuario.get().setId(Long.valueOf(listaUsuario.get(i)[0].toString()));
+//				usuario.get().setUsername(listaUsuario.get(i)[1].toString());
+//				usuario.get().setEmail(listaUsuario.get(i)[2].toString());
+//				usuario.get().setPhoto(listaUsuario.get(i)[3].toString());
+//				usuario.get().setContentType(listaUsuario.get(i)[4].toString());
+//				
+//				if (listaUsuario.get(i)[5] != null) {
+//					departamento.setId(Long.valueOf(listaUsuario.get(i)[5].toString()));
+//					departamento.setName(listaUsuario.get(i)[6].toString());
+//				}
+//				
+//				usuario.get().setDepartamento(departamento);
+//				
+//				if (listaUsuario.get(i)[7] != null) {
+//					role.setId(Long.valueOf(listaUsuario.get(i)[7].toString()));
+//					role.setName(listaUsuario.get(i)[8].toString());
+//				}
+//				
+//				usuario.get().getRoles().add(role);
+//			}
+//		}
+//		
+//		
+//		return usuario;
+//	}
 
 	private Predicate predicados(CriteriaBuilder cb, Root<Usuario> root, UsuarioFiltro usuarioFiltro) {
 		Predicate predicates = null;

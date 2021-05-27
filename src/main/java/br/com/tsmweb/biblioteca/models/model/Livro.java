@@ -28,21 +28,21 @@ public class Livro implements Serializable  {
 	@Column(name = "ID")
 	private Long id;
 	
-	@NotNull(message = "A editora do livro é obrigatório")
-	@ManyToOne(fetch = FetchType.EAGER)
+	@NotNull(message = "O identificador da Editora não pode ser nulo.")
+	@ManyToOne(fetch = FetchType.LAZY)
 	@JoinColumn(name = "PUBLISHER_ID", nullable = false)
 	private Editora publisher;
 	
 	@Size(min = 10, max = 100, message="Digite o mínimo {min} e o máximo {max} caracteres")
-	@NotEmpty(message = "O título do livro é obrigatório")
-	@NotBlank(message = "O título do livro é obrigatório")
+	@NotEmpty(message = "O título do livro não pode ser vazio")
+	@NotBlank(message = "O título do livro não pode ser em branco")
 	@NotNull(message = "O título do livro é obrigatório")
 	@Column(name = "TITLE", length = 100, nullable = false)
 	private String title;
 	
 	@Size(min = 3, max = 100, message="Digite o mínimo {min} e o máximo {max} caracteres")
-	@NotEmpty(message = "O autor do livro é obrigatório")
-	@NotBlank(message = "O autor do livro é obrigatório")
+	@NotEmpty(message = "O autor do livro não pode ser vazio")
+	@NotBlank(message = "O autor do livro não pode ser em branco")
 	@NotNull(message = "O autor do livro é obrigatório")
 	@Column(name = "AUTHOR", length = 100, nullable = false)
 	private String author;
