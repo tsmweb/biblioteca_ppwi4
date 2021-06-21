@@ -7,6 +7,7 @@ public enum ProblemType {
 	REGISTRO_NAO_ENCONTRADO("/registro-nao-encontrado", "O registro solicitado não foi localizado"),
 	DADOS_INVALIDOS("/dados-invalidos", "Dados inválidos"),
 	SERVICO_EMAIL("/erro-servidor-email", "Erro no serviço de e-mail"),
+	USUARIO_BLOQUEADO("/usuario-bloqueado", "Usuário bloqueado"),
 	ERRO_INTERNO("/erro-interno", "Erro interno do sistema");
 	
 	private String uri;

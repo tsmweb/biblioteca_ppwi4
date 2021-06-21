@@ -25,8 +25,8 @@ public class Editora implements Serializable {
 	private Long id;
 	
 	@Size(min = 3, max = 100, message="Digite o mínimo {min} e o máximo {max} caracteres")
-	@NotEmpty(message = "O nome da editora é obrigatório")
-	@NotBlank(message = "O nome da editora é obrigatório")
+	@NotEmpty(message = "O nome da editora não pode ser vazio")
+	@NotBlank(message = "O nome da editora não pode ser em branco")
 	@NotNull(message = "O nome da editora é obrigatório")
 	@Column(name = "NAME", length = 100, nullable = false)
 	private String name;

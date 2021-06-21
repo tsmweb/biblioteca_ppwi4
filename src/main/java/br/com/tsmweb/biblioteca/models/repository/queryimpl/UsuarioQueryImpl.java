@@ -7,7 +7,6 @@ import java.util.Optional;
 
 import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
-import javax.persistence.Query;
 import javax.persistence.TypedQuery;
 import javax.persistence.criteria.CriteriaBuilder;
 import javax.persistence.criteria.CriteriaQuery;
@@ -20,8 +19,6 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
 import org.thymeleaf.util.StringUtils;
 
-import br.com.tsmweb.biblioteca.models.model.Departamento;
-import br.com.tsmweb.biblioteca.models.model.Role;
 import br.com.tsmweb.biblioteca.models.model.Usuario;
 import br.com.tsmweb.biblioteca.models.repository.filtros.UsuarioFiltro;
 import br.com.tsmweb.biblioteca.models.repository.query.UsuarioQuery;
@@ -34,7 +31,10 @@ public class UsuarioQueryImpl implements UsuarioQuery {
 	@Override
 	public Optional<Usuario> findUsuarioByEmail(String email) {
 		TypedQuery<Usuario> consultaUsuarioEmail = entityManager
-				.createQuery("SELECT u FROM Usuario u WHERE u.email = :email", Usuario.class);
+				.createQuery("SELECT u FROM Usuario u "
+						+ "LEFT JOIN FETCH u.roles "
+						+ "LEFT JOIN FETCH u.departamento "
+						+ "WHERE u.email = :email", Usuario.class);
 		
 		consultaUsuarioEmail.setParameter("email", email);
 		

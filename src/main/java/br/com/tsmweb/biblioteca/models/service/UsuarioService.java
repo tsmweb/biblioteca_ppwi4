@@ -6,6 +6,7 @@ import java.util.Optional;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -30,6 +31,9 @@ public class UsuarioService {
 	@Autowired
 	private RoleService roleService;
 	
+	@Autowired
+	private PasswordEncoder passwordEncoder;
+	
 	public Usuario save(Usuario usuario) {
 		Optional<Usuario> usuarioCadastrado = findUsuarioByEmail(usuario.getEmail());
 		
@@ -48,6 +52,8 @@ public class UsuarioService {
 		departamentoService.findDepartamentoById(usuario.getDepartamento().getId());
 		
 		usuario.getRoles().forEach(role -> roleService.findRoleById(role.getId()));
+		
+		usuario.setPassword(encodePassword(usuario.getPassword()));
 		
 		return usuarioRepository.save(usuario);
 	}
@@ -102,6 +108,10 @@ public class UsuarioService {
 	public Usuario findUserById(Long id) {
 		return usuarioRepository.findUsuarioById(id)
 				.orElseThrow(() -> new EntidadeNaoCadastradaException("Usuário não cadastrado!"));
+	}
+	
+	private String encodePassword(String password) {
+		return passwordEncoder.encode(password);
 	}
 	
 }

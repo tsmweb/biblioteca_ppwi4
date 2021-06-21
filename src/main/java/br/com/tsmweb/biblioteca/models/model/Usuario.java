@@ -2,6 +2,7 @@ package br.com.tsmweb.biblioteca.models.model;
 
 import java.io.Serializable;
 import java.util.ArrayList;
+import java.util.Collection;
 import java.util.Date;
 import java.util.List;
 
@@ -25,10 +26,13 @@ import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Size;
 
 import org.springframework.format.annotation.DateTimeFormat;
+import org.springframework.security.core.GrantedAuthority;
+import org.springframework.security.core.authority.SimpleGrantedAuthority;
+import org.springframework.security.core.userdetails.UserDetails;
 
 @Entity
 @Table(name = "USUARIO")
-public class Usuario implements Serializable {
+public class Usuario implements UserDetails, Serializable {
 
 	private static final long serialVersionUID = 4786887518061634426L;
 
@@ -119,10 +123,11 @@ public class Usuario implements Serializable {
 		this.id = id;
 	}
 
+	@Override
 	public String getUsername() {
 		return username;
 	}
-
+	
 	public void setUsername(String username) {
 		this.username = username;
 	}
@@ -207,6 +212,37 @@ public class Usuario implements Serializable {
 		this.roles = roles;
 	}
 
+	@Override
+	public Collection<? extends GrantedAuthority> getAuthorities() {
+		var autoridades = new ArrayList<GrantedAuthority>();
+		
+		roles.forEach(role -> {
+			autoridades.add(new SimpleGrantedAuthority("ROLE_" + role.getName().toUpperCase()));
+		});
+		
+		return autoridades;
+	}
+
+	@Override
+	public boolean isAccountNonExpired() {
+		return active;
+	}
+
+	@Override
+	public boolean isAccountNonLocked() {
+		return active;
+	}
+
+	@Override
+	public boolean isCredentialsNonExpired() {
+		return active;
+	}
+
+	@Override
+	public boolean isEnabled() {
+		return active;
+	}
+	
 	@Override
 	public int hashCode() {
 		final int prime = 31;

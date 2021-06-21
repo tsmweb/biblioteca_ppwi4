@@ -10,6 +10,9 @@ import org.springframework.context.i18n.LocaleContextHolder;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.authentication.BadCredentialsException;
+import org.springframework.security.authentication.LockedException;
+import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.ControllerAdvice;
 import org.springframework.web.bind.annotation.ExceptionHandler;
@@ -38,6 +41,45 @@ public class BibliotecaExceptionHandler extends ResponseEntityExceptionHandler {
 		return handleExceptionInternal(ex, problem, new HttpHeaders(), status, request);
 	}
 	
+	@ExceptionHandler(UsernameNotFoundException.class)
+	public ResponseEntity<?> usernameNotFoundException(UsernameNotFoundException ex, WebRequest request) {
+		var status = HttpStatus.NOT_FOUND;
+		var problemType = ProblemType.REGISTRO_NAO_ENCONTRADO;
+		var detail = ex.getMessage();
+		
+		var problem = createBuilderProblem(status, problemType, detail)
+							.addUserMessage("Usuário não encontrada")
+							.build();
+		
+		return handleExceptionInternal(ex, problem, new HttpHeaders(), status, request);
+	}
+	
+	@ExceptionHandler(LockedException.class)
+	public ResponseEntity<?> lockedException(LockedException ex, WebRequest request) {
+		var status = HttpStatus.NOT_FOUND;
+		var problemType = ProblemType.USUARIO_BLOQUEADO;
+		var detail = ex.getMessage();
+		
+		var problem = createBuilderProblem(status, problemType, detail)
+							.addUserMessage("Usuário está bloqueado no sistema")
+							.build();
+		
+		return handleExceptionInternal(ex, problem, new HttpHeaders(), status, request);
+	}
+	
+	@ExceptionHandler(BadCredentialsException.class)
+	public ResponseEntity<?> badCredentialsException(BadCredentialsException ex, WebRequest request) {
+		var status = HttpStatus.NOT_FOUND;
+		var problemType = ProblemType.DADOS_INVALIDOS;
+		var detail = ex.getMessage();
+		
+		var problem = createBuilderProblem(status, problemType, detail)
+							.addUserMessage("Senha inválida")
+							.build();
+		
+		return handleExceptionInternal(ex, problem, new HttpHeaders(), status, request);
+	}
+	
 	@ExceptionHandler(EntidadeNaoCadastradaException.class)
 	public ResponseEntity<?> handleEntidadeNaoCadastradaExecption(EntidadeNaoCadastradaException ex, WebRequest request) {
 		var status = HttpStatus.NOT_FOUND;
@@ -50,7 +92,7 @@ public class BibliotecaExceptionHandler extends ResponseEntityExceptionHandler {
 		
 		return handleExceptionInternal(ex, problem, new HttpHeaders(), status, request);
 	}
-
+	
 	@ExceptionHandler(EmailCadastradoException.class)
 	public ResponseEntity<?> handleEmailExecption(EmailCadastradoException ex, WebRequest request) {
 		var status = HttpStatus.INTERNAL_SERVER_ERROR;
